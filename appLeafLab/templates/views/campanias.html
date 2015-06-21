@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block estilos %} 
+	<link rel="stylesheet" href="{% static "css/campanias.css" %}">
+{% endblock estilos%}
+
+{% block titulo %}
+	Este es el index
+{% endblock titulo %}
+
+{% block menu %}
+	<li><a href="/">Home</a></li>
+	<li class="active"><a href="/campanias">Campañas</a></li>
+	<li><a href="/estadisticas">Estadísticas</a></li>
+	<li><a href="/baseDeDatos">Base de Datos</a></li>
+	<li><a href="/about">About</a></li>
+{% endblock %}
+
+{% block contenido %}
+<div class="contenedorCampania">
+
+</div>
+	campania
+{% endblock %}

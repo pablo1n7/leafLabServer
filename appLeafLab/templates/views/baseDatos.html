@@ -1,0 +1,484 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block estilos %} 
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static "dataTable/css/jquery.dataTables.min.css" %}">
+	<link rel="stylesheet" href="{% static "css/baseDatos.css" %}">
+	<link rel="stylesheet" href="{% static "autosuggest/css/autosuggest.css" %}">
+	<link rel="stylesheet" href="{% static "Jcrop/css/jquery.Jcrop.min.css" %}">
+{% endblock estilos%}
+
+{% block script %}
+	<script src="{% static "Jcrop/js/jquery.Jcrop.min.js" %}"></script>
+	<script src="{% static "js/Drag&Drop.js" %}"></script>
+	<script src="{% static "js/manejadorTablas.js" %}"></script>
+	<script src="{% static "js/baseDatos.js" %}"></script>
+	<script src="{% static "dataTable/js/jquery.dataTables.min.js" %}"></script>
+
+	<script src="{% static "autosuggest/js/autosuggest.js" %}"></script>
+
+{% endblock script%}
+
+{% block titulo %}
+	Datos
+{% endblock titulo %}
+
+{% block menu %}
+	<li><a href="/">Home</a></li>
+	<li><a href="/campanias">Campañas</a></li>
+	<li><a href="/estadisticas">Estadísticas</a></li>
+	<li class="active"><a href="/baseDeDatos">Base de Datos</a></li>
+	<li><a href="/about">About</a></li>
+{% endblock %}
+
+
+{% block contenido%}
+<div class="contenidoBaseDatos">
+
+
+<div class="contenido">
+
+	<div id="contenedorABM" class="contenedorABM">
+
+		<div id="secciones" class="list-group">
+
+			<a id="formaBiologica" class="list-group-item active">
+			    <h4 class="list-group-item-heading">Forma Biológica</h4>
+			    <p class="list-group-item-text">Conjunto de rasgos característicos de una planta que determinan su adaptación al medio.</p>
+			</a>
+			<a id="tipoBiologico" class="list-group-item">
+			    <h4 class="list-group-item-heading">Tipo Biológico</h4>
+			    <p class="list-group-item-text">Agrupaciones de especies, con o sin afinidad filogenética, que presentan un conjunto de rasgos similares.</p>
+			</a>
+			<a id="estadoConservacion" class="list-group-item">
+			    <h4 class="list-group-item-heading">Estado de Conservación</h4>
+			    <p class="list-group-item-text">Medida de la probabilidad de que una especie continúe existiendo en el presente o en el futuro cercano.</p>
+			</a>
+			<a id="distribucionGeografica" class="list-group-item">
+			    <h4 class="list-group-item-heading">Distribución Geográfica</h4>
+			    <p class="list-group-item-text">Información referida al origen y distribucion de una especie.</p>
+			</a>
+
+			<a id="familia" class="list-group-item">
+			    <h4 class="list-group-item-heading">Familia Biológica</h4>
+			    <p class="list-group-item-text">Categoría taxonómica utilizada para referirse a grupos mayores de plantas.</p>
+			</a>
+			<a id="especie" class="list-group-item">
+			    <h4 class="list-group-item-heading">Especie Biológica</h4>
+			    <p class="list-group-item-text">Unidad básica de la clasificación biológica.</p>
+			</a>
+			<a id="suelo" class="list-group-item">
+			    <h4 class="list-group-item-heading">Tipo de Suelo</h4>
+			    <p class="list-group-item-text">Clasificación según su estructura y/o forma física.</p>
+			</a>
+		</div>
+
+	</div>
+
+	<div id="contenedorOpciones" class="contenedorABM datosAsociados list-group">
+	
+		<div class="opcion" id="contenidoFormaBiologica">
+			<h4>Forma Biológica</h4>
+			<table id="tablaFormaBiologica" class="table">
+		      <thead>
+		        <tr>
+		          <th>#</th>
+		          <th>Id</th>
+		          <th>Nombre Forma Biológica</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+
+				{% for forma in formasBiologicas %}
+
+					<tr>
+						<td scope="row">{{forloop.counter}}</td>
+						<td>{{forma.id}}</td>
+						<td>{{forma.nombre}}</td>
+					</tr>
+				{% endfor %}           
+
+
+
+
+		      </tbody>
+		    </table>
+		</div>
+
+
+		<div class="oculto opcion" id="contenidoTipoBiologico">
+			<h4>Tipo Biológico</h4>
+			<table id="tablaTipoBiologico" class="table">
+		      <thead>
+		        <tr>
+		          <th>#</th>
+		          <th>Id</th>
+		          <th>Nombre Tipo Biológico</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+
+				{% for tipo in tiposBiologicos %}
+
+					<tr>
+						<td scope="row">{{forloop.counter}}</td>
+						<td>{{tipo.id}}</td>
+						<td>{{tipo.nombre}}</td>
+					</tr>
+				{% endfor %}           
+
+		      </tbody>
+		    </table>
+			
+		</div>
+
+
+
+		<div class="oculto opcion" id="contenidoEstadoConservacion">
+			<h4>Estado de Conservación</h4>
+		    <table id="tablaEstadosConservacion" class="table">
+		      <thead>
+		        <tr>
+		          <th>#</th>
+		          <th>Id</th>
+		          <th>Nombre Estado de Conservación</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+
+				{% for estado in estadosConservacion %}
+
+					<tr>
+						<td scope="row">{{forloop.counter}}</td>
+						<td>{{estado.id}}</td>
+						<td>{{estado.nombre}}</td>
+					</tr>
+				{% endfor %}           
+
+		      </tbody>
+		    </table>
+
+		</div>
+
+		<div class="oculto opcion" id="contenidoDistribucionGeografica">
+			<h4>Distribución Geográfica</h4>
+			<table id="tablaDistribucionesGeograficas" class="table">
+		      <thead>
+		        <tr>
+		          <th>#</th>
+		          <th>Id</th>
+		          <th>Nombre Distribución Geográfica</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+
+				{% for distribucion in distribucionesGeograficas %}
+
+					<tr>
+						<td scope="row">{{forloop.counter}}</td>
+						<td>{{distribucion.id}}</td>
+						<td>{{distribucion.nombre}}</td>
+					</tr>
+				{% endfor %}           
+
+		      </tbody>
+		    </table>
+			
+			
+		</div>
+		
+		<div class="oculto opcion" id="contenidoFamilia">
+			<h4>Familia Biológica</h4>
+			<table id="tablaFamilias" class="table">
+		      <thead>
+		        <tr>
+		          <th>#</th>
+		          <th>Id</th>
+		          <th>Nombre Familia</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+
+				{% for familia in familias %}
+
+					<tr>
+						<td scope="row">{{forloop.counter}}</td>
+						<td>{{familia.id}}</td>
+						<td>{{familia.nombre}}</td>
+					</tr>
+				{% endfor %}           
+
+		      </tbody>
+		    </table>
+		</div>
+		
+		<div class="oculto opcion" id="contenidoEspecie">
+			<h4>Especie Biológica</h4>
+			<table id="tablaEspecies" class="table">
+		      <thead>
+		        <tr>
+		          <th>#</th>
+		          <th class="oculto">Id</th>
+		          <th>Nombre</th>
+		          <th>Familia</th>
+		          <th>Forma Biológica</th>
+		          <th>Tipo Biológico</th>
+		          <th class="oculto">Estado de Conservación</th>
+		          <th class="oculto">Distribución Geográfica</th>
+		          <th class="oculto">Indice de Calidad</th>
+		          <th class="oculto">Forrajera</th>
+
+
+		        </tr>
+		      </thead>
+		      <tbody>
+		   
+				{% for especie in especies %}
+
+					<tr>
+						<td scope="row">{{forloop.counter}}</td>
+						<td class="oculto">{{especie.id}}</td>
+						<td>{{especie.nombre}}</td>
+						<td>{{especie.familia.nombre}}</td>
+						<td>{{especie.formaBiologica.nombre}}</td>
+						<td>{{especie.tipoBiologico.nombre}}</td>
+						<td class="oculto">{{especie.distribucionGeografica.nombre}}</td>
+						<td class="oculto">{{especie.indiceDeCalidad}}</td>
+						<td class="oculto">{{especie.forrajera}}</td>
+						<td class="oculto">{{especie.estadoDeConservacion.nombre}}</td>
+
+					</tr>
+				{% endfor %}           
+
+		      </tbody>
+		    </table>
+
+		</div>
+
+		<div class="oculto opcion" id="contenidoSuelo">
+			<h4>Tipo de Suelo</h4>
+			<table id="tablaTiposSuelo" class="table">
+		      <thead>
+		        <tr>
+		          <th>#</th>
+		          <th>Id</th>
+		          <th>Nombre Tipo Suelo</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+
+				{% for tipo in tiposSuelo %}
+
+					<tr>
+						<td scope="row">{{forloop.counter}}</td>
+						<td>{{tipo.id}}</td>
+						<td>{{tipo.nombre}}</td>
+					</tr>
+				{% endfor %}           
+
+		      </tbody>
+		    </table>
+		</div>
+
+	</div>
+
+	<div id="modalCarga" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" name="cabeceraModal">Modal title</h4>
+        </div>
+        <div class="modal-body">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger izquierda oculto"><i class="fa fa-trash"></i> Eliminar</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+          <button type="button" name="aceptar" class="btn btn-primary"><i class="fa fa-check"></i> Aceptar</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
+
+</div>
+
+<div id="modeloCargaFormaBiologica" class="oculto formularioCarga">
+	<form>	
+	  <input type="text" name="id" style="display:none" value="-1" READONLY>
+	  <input type="text" name="tipoElemento" style="display:none" value="forma" READONLY>
+	  <input type="text" name="nombreTabla"  style="display:none" value="tablaFormaBiologicas" READONLY>
+	  <div class="form-group">
+	    <label>Nombre de Forma Biológica</label>
+	    <input type="text" name="nombre" class="form-control" placeholder="Ej: Arbusto" patron="^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$" mensaje="El nombre debe comenzar con almenos dos letras y no puede estar vacio">
+	  </div>
+	</form>
+</div>
+</div>
+
+<div id="modeloCargaTipoBiologico" class="oculto formularioCarga">
+	<form>
+		<input type="text" name="id" style="display:none" value="-1" READONLY>
+		<input type="text" name="tipoElemento" style="display:none" value="tipo" READONLY>
+		<input type="text" name="nombreTabla"  style="display:none" value="tablaTipoBiologicos" READONLY>
+	  	<div class="form-group">
+		    <label>Nombre de Tipo Biológico</label>
+		    <input type="text" name="nombre" class="form-control" placeholder="Ej: Eudicotiledónea" patron="^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$" mensaje="El nombre debe comenzar con almenos dos letras y no puede estar vacio">
+	  	</div>
+	</form>
+</div>
+
+<div id="modeloCargaEstadoConservacion" class="oculto formularioCarga">
+	<form>
+		<input type="text" name="id" style="display:none" value="-1" READONLY>
+		<input type="text" name="tipoElemento" style="display:none" value="estado" READONLY>
+		<input type="text" name="nombreTabla"  style="display:none" value="tablaEstadosConservacion" READONLY>
+	  	<div class="form-group">
+		    <label>Nombre de Estado de Conservación</label>
+		    <input type="text" name="nombre" class="form-control" placeholder="Ej: Protegida" patron="^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$" mensaje="El nombre debe comenzar con almenos dos letras y no puede estar vacio">
+	  	</div>
+	</form>
+</div>
+</div>
+
+<!--  -->
+
+<div id="modeloCargaFamilia" class="oculto formularioCarga">
+	<form>
+		<input type="text" name="id" style="display:none" value="-1" READONLY>
+		<input type="text" name="tipoElemento" style="display:none" value="familia" READONLY>
+		<input type="text" name="nombreTabla"  style="display:none" value="tablaFamilias" READONLY>
+	  	<div class="form-group">
+		    <label>Nombre de Familia</label>
+		    <input type="text" name="nombre" class="form-control" placeholder="Ej:Poaceae" patron="^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$" mensaje="El nombre debe comenzar con almenos dos letras y no puede estar vacio">
+	  	</div>
+	</form>
+</div>
+</div>
+
+<!--  -->
+
+<div id="modeloCargaTipoSuelo" class="oculto formularioCarga">
+	<form>
+		<input type="text" name="id" style="display:none" value="-1" READONLY>
+		<input type="text" name="tipoElemento" style="display:none" value="suelo" READONLY>
+		<input type="text" name="nombreTabla"  style="display:none" value="tablaTiposSuelo" READONLY>
+	  	<div class="form-group">
+		    <label>Nombre de Tipo Suelo</label>
+		    <input type="text" name="nombre" class="form-control" placeholder="Ej:Rocoso" patron="^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$" mensaje="El nombre debe comenzar con almenos dos letras y no puede estar vacio">
+	  	</div>
+	</form>
+</div>
+</div>
+
+<!--  -->
+
+<div id="modeloCargaDistribucionGeografica" class="oculto formularioCarga">
+	<form>
+		<input type="text" name="id" style="display:none" value="-1" READONLY>
+		<input type="text" name="tipoElemento" style="display:none" value="dist" READONLY>
+		<input type="text" name="nombreTabla"  style="display:none" value="tablaDistribucionesGeograficas" READONLY>
+	  	<div class="form-group">
+		    <label>Nombre de Distribución Geográfica</label>
+		    <input type="text" name="nombre" class="form-control" placeholder="Ej:Exótica" patron="^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$" mensaje="El nombre debe comenzar con almenos dos letras y no puede estar vacio">
+	  	</div>
+	</form>
+</div>
+
+<div id="modeloCargaEspecie" class="oculto formularioCarga">
+	<form>
+		<input type="text" name="id" style="display:none" value="-1" READONLY>
+		<input type="text" name="tipoElemento" style="display:none" value="especie" READONLY>
+		<input type="text" name="nombreTabla"  style="display:none" value="tablaEspecies" READONLY>
+
+		<div class="opcionesEspecie">
+		  	<div class="form-group">
+			    <label>Nombre de Especie</label>
+			    <input type="text" name="nombre" class="form-control" placeholder="Ej:Exótica" patron="^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$" mensaje="El nombre debe comenzar con almenos dos letras y no puede estar vacio">
+		  	</div>
+		  	<div class="form-group">
+			    <label>Familia Biológica</label>
+			    <input type="text" name="familia" class="form-control" placeholder="Ej:Poaceae" mensaje="El valor debe estar entre las opciones sugeridas">
+			</div>
+		  	<div class="form-group">
+			    <label>Forma Biológica</label>
+			    <input type="text" name="forma" class="form-control" placeholder="Ej:Arbusto" mensaje="El valor debe estar entre las opciones sugeridas">
+		  	</div>
+		  	<div class="form-group">
+			    <label>Tipo Biológico</label>
+			    <input type="text" name="tipo" class="form-control" placeholder="Ej:Eudicotiledónea" mensaje="El valor debe estar entre las opciones sugeridas">
+		  	</div>
+	  	</div>
+	  	<div class="opcionesEspecie opcionesEspecieDerecha">
+		  	<div class="form-group">
+			    <label>Distribución Geográfica</label>
+			    <input type="text" name="distribucion" class="form-control" placeholder="Ej:Endémica" mensaje="El valor debe estar entre las opciones sugeridas">
+		  	</div>
+		  	<div class="form-group">
+			    <label>Índice de Calidad</label>
+			    <!-- <input type="text" name="indice" class="form-control" placeholder="Ej:4"> -->
+	    		<input name="indice" class="slider range-value" oninput="actualizarValor(this);" type="range" min="0" max="5" value="0" />
+	    		<span class="range-value">0</span>
+		  	</div>
+
+		  	<div class="form-group divForrajera">
+			    <label> Forrajera</label>
+				<input id="toggle1" checked="" name="forrajera" value="1" class="toggle oculto" type="checkbox">
+				<label for="toggle1" data-si="No" data-no="Si">
+				 	<span class="toggleGuia" ></span>
+				</label>
+			    <!-- <input type="text" name="forrajera" class="form-control" placeholder="Ej:Sí"> -->
+		  	</div>
+		  	<div class="form-group">
+			    <label>Estado de Conservación</label>
+			    <input type="text" name="estado" class="form-control" placeholder="Ej:Protegida" mensaje="El valor debe estar entre las opciones sugeridas">
+		  	</div>
+	  	</div>
+	  	<div class="form-group flotIzq ancho100">
+		    <label>Imagen</label>
+		    <div id="divDragNDrop" class="divDropeable"> Arrastre la Imagen de la Especie Aquí.</div>
+		    <div id="divContenedorImagen" class="oculto">
+	          	<button id="botonCambiarImagen" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>   Descartar</button>
+		    	<img id="imagen" class="imagenEspecie" src="">
+		    </div>
+	  	</div>
+	</form>
+</div>
+</div>
+
+<!--  -->
+
+
+{% endblock contenido%}
+
+
+
+
+
+
+<!-- 
+	<form>
+	  <div class="form-group">
+	    <label for="exampleInputEmail1">Email address</label>
+	    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+	  </div>
+	  <div class="form-group">
+	    <label for="exampleInputPassword1">Password</label>
+	    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+	  </div>
+	  <div class="form-group">
+	    <label for="exampleInputFile">File input</label>
+	    <input type="file" id="exampleInputFile">
+	    <p class="help-block">Example block-level help text here.</p>
+	  </div>
+	  <div class="checkbox">
+	    <label>
+	      <input type="checkbox"> Check me out
+	    </label>
+	  </div>
+	</form>
+ -->

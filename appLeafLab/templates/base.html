@@ -1,0 +1,76 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+    {% load staticfiles %}
+    <!-- Jquery -->    
+    <script src="{% static "jquery/jquery-2.1.4.min.js" %}"></script>
+    <script src="{% static "js/base.js" %}"></script> 
+
+    
+
+    <!-- Bootstrap -->    
+    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap-theme.min.css" %}">
+    <link rel="stylesheet" href="{% static "bootstrap/css/cover.css" %}">
+    <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+
+
+    <!-- Awesome -->    
+    <link rel="stylesheet" href="{% static "font-awesome/css/font-awesome.min.css" %}">
+    
+
+
+    <!-- Estilos Nuestros -->    
+    <link rel="stylesheet" type="text/css" href="{% static "css/base.css" %}"> 
+  
+    <!-- Alertify -->    
+    <script src="{% static "alertify/js/alertify.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static "alertify/css/alertify.css" %}">
+    <link rel="stylesheet" href="{% static "alertify/css/themes/default.min.css" %}">
+    
+{% block estilos %} {% endblock estilos %}
+{% block script %}  {% endblock script %}
+
+
+    <title>{% block titulo %}LeafLab Server{% endblock titulo %}</title> 
+
+</head>
+
+<body>
+    
+    <div class="masthead clearfix">
+        <div class="inner">
+            <h3 class="masthead-brand">
+                <i class="fa fa-leaf"></i>
+                Leaf-Lab
+            </h3>
+            <nav>
+                <ul class="nav masthead-nav">
+                    {% block menu %}
+                    <li class="active"><a href="/">Home</a></li>
+                    <li><a href="/campanias">Campañas</a></li>
+                    <li><a href="/estadisticas">Estadísticas</a></li>
+                    <li><a href="/baseDeDatos">Base de Datos</a></li>
+                    <li><a href="/about">About</a></li>
+                    {% endblock menu %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    {% block contenido %}
+
+    {% endblock contenido %}
+
+    <div class="mastfoot">
+            <!-- <div class="inner"> -->
+            <div>
+              <p><a href="http://fortawesome.github.io/Font-Awesome/"><i class="fa fa-flag"></i> Font Awesome</a>.</p>
+            </div>
+    </div>
+
+    
+
+</body>
+</html>

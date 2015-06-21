@@ -1,0 +1,182 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"ba",
+				"background"
+			],
+			[
+				"marg",
+				"margin-left"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/etc/ssh/sshd.config",
+		"/usr/share/exe/style/Todo-FP/nav.css",
+		"/usr/share/exe/style/Todo-FP/content.css",
+		"/usr/share/exe/scripts/extjs/index.html",
+		"/usr/share/exe/scripts/common_src.js",
+		"/usr/share/exe/scripts/common.js",
+		"/etc/php5/apache2/php.ini",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/web/application/controllers/welcome.php",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/web/application/views/mapa.php",
+		"/home/pablo/Documentos/ProyectosWeb/proyecto2_web/example.html",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/web/application/views/header.php",
+		"/home/pablo/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/schema/users.sql",
+		"/home/pablo/.config/sublime-text-2/Packages/User/Preferences.sublime-settings",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/web/application/views/index.html",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/web/_/css/bootstrap/bootstrap.css",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/schema/users_password_reset.sql",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/web/_/css/bootstrap/bootstrap.min.css",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/web/application/views/templates/page/default/head.php",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/web/_/js/libs/jquery-2.1.1.min.js",
+		"/home/pablo/.cache/.fr-OfX4Hb/bootstrap-3.1.1-dist/css/bootstrap.css",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/web/application/config/config.php",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/schema/autoresponders_log.sql",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/schema/autoresponders.sql",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/schema/countries.sql",
+		"/home/pablo/Documentos/ProyectosWeb/ProyectoBacheo/schema/us_states.sql",
+		"/usr/lib/python2.7/dist-packages/terra/VteObject.py",
+		"/etc/apt/sources.list",
+		"/etc/phppgadmin/config.inc.php",
+		"/var/www/html/phpinfo.php",
+		"/usr/share/applications/defaults.list"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"my_hea",
+			"tmp",
+			";   ",
+			"left",
+			"folder",
+			"'",
+			"`",
+			"gedit.desktop"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"",
+			"'",
+			"sublime-text.desktop "
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 260.0,
+	"status_bar_visible": true
+}
