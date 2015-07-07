@@ -12,7 +12,7 @@ from models import *
 
 # Create your views here.
 
-elementosSimples = {"especie":Especie,"suelo":TipoSuelo,"dist":DistribucionGeografica,"familia":Familia ,"forma":FormaBiologica,"tipo":TipoBiologico,"estado":EstadoDeConservacion}
+elementosSimples = {"visita":Visita,"transecta":Transecta,"campania":Campania,"tipoEjemplar":TipoEjemplar,"propiedad":Propiedad,"especie":Especie,"suelo":TipoSuelo,"dist":DistribucionGeografica,"familia":Familia ,"forma":FormaBiologica,"tipo":TipoBiologico,"estado":EstadoDeConservacion}
 
 def index(request):
 	return render_to_response('views/index.html')
@@ -45,6 +45,7 @@ def administracionDeDatos(request):
 def sincronizar(request):
 	# if request.is_ajax():
 	if request.method == 'GET':
+		#Elementos que solo se sincronizando en un sentido.(del servidor hacia la aplicacion)
 		usuario = request.GET.get("identidad")
 		tipoElemento = request.GET.get("nombre")
 		return HttpResponse(elementosSimples[tipoElemento].obtenerElementos())	
@@ -64,7 +65,7 @@ def identidad(request):
 
 @csrf_exempt
 def altaElementoSimple(request):
-	ipdb.set_trace()
+	#ipdb.set_trace()
 	if request.is_ajax():
 		tipoElemento = request.POST.get('tipo','') 
 		identificador=request.POST.get('id','')

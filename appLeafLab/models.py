@@ -4,7 +4,7 @@
 from django.db import models,IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
-import re,ipdb,base64,Image,json
+import re,ipdb,base64,Image,json, datetime
 import uuid
 import base64
 
@@ -99,7 +99,7 @@ class FormaBiologica(models.Model):
 
     def salvar(self):
         patron = re.compile('^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$',re.IGNORECASE)
-        if(patron.match(self.nombre)):
+        if(patron.match((u"%s" % self.nombre))):
             try:
                 self.save()
                 respuesta = {'codigo': "200",'mensaje':"Operación realizada con exito.",'objeto':{'id':self.id,'nombre':self.nombre}}
@@ -232,40 +232,6 @@ class EstadoDeConservacion(models.Model):
     def __unicode__(self):
         return self.nombre
 
-# 	 db.transaction(function (t) {
-#        t.executeSql('CREATE TABLE IF NOT EXISTS Campania(nombre TEXT NOT NULL,descripcion TEXT, fecha INT NOT NULL, PRIMARY KEY(nombre,fecha));', [], null, null);
-#    });
-
-class Campania(models.Model):
-    nombre = models.CharField(max_length=200)
-    fecha = models.IntegerField()
-    descripcion = models.CharField(max_length=200)
-    class Meta:
-		unique_together = ("nombre", "fecha")
-
-#	  db.transaction(function (t) {
-#         t.executeSql('CREATE TABLE IF NOT EXISTS Transecta(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,nombreCampania TEXT NOT NULL,cuadro TEXT,fechaCampania INT NOT NULL,sentido FLOAT NOT NULL,ambiente TEXT NOT NULL,distanciaEntrePuntos INT NOT NULL, FOREIGN KEY (nombreCampania) REFERENCES Campania(nombre),FOREIGN KEY (fechaCampania) REFERENCES Campania(fecha));', [], null, null);
-#     });
-
-class Transecta(models.Model):
-	cuadro = models.CharField(max_length=200)
-	sentido = models.FloatField()
-	ambiente = models.CharField(max_length=200)
-	distanciaEntrePuntos = models.IntegerField(default=3)
-	campania = models.ForeignKey(Campania, on_delete=models.PROTECT)
-
-
-
-# 	  db.transaction(function (t) {
-#         t.executeSql('CREATE TABLE IF NOT EXISTS Visita(idTransecta INTEGER NOT NULL ,fecha INT NOT NULL,FOREIGN KEY (idTransecta) REFERENCES Transecta(id), PRIMARY KEY (idTransecta,fecha));', [], null, null);
-#     });
-
-class Visita(models.Model):
-	transecta = models.ForeignKey(Transecta,on_delete=models.PROTECT)
-	fecha = models.IntegerField()
-	class Meta:
-		unique_together = ("transecta", "fecha")
-
 
 
 # 	  db.transaction(function (t) {
@@ -283,31 +249,48 @@ class Especie(models.Model):
     estadoDeConservacion = models.ForeignKey(EstadoDeConservacion,on_delete=models.PROTECT)
     imagen = models.CharField(max_length=10000000)
 
+
+# {"id":e.get("id"),"id_servidor":e.get("id_servidor"),"nombre":e.get("nombre"),
+# "familiaLocal":e.get("familia").get("id"),"familia":familiasDicc[e.get("familia").get("id")],
+# "formaBiologica":e.get("formaBiologica").id,"tipoBiologico":e.get("tipoBiologico").id,"estadoDeConservacion":e.get("estadoDeConservacion").id,
+# "distribucionGeografica":e.get("distribucionGeografica").id,"indiceDeCalidad":e.get("indiceDeCalidad"),
+# "forrajera":e.get("forrajera")}
+
+
     @classmethod
     def obtenerElementos(self,datos):
-        ipdb.set_trace()
         especies = []
         claves = []
-        for familiaJson in datos:
+        for especieJson in datos:
             #try:
             #ipdb.set_trace()
                 #familia = Familia.objects.get(id=familiaJson['id_servidor'])
-            resultado = Familia.objects.filter(nombre=familiaJson['nombre'])
+            resultado = self.objects.filter(nombre=especieJson['nombre'])
             if not resultado:
                 try:
-                    familia = Familia.objects.get(id=familiaJson['id_servidor'])
+                    especie = self.objects.get(id=especieJson['id_servidor'])
                 except ObjectDoesNotExist, e:
-                    familia = Familia(nombre=familiaJson['nombre'])
-                    familia.salvar()
+
+                    especie = Especie(nombre=especieJson['nombre'])
+                    especie.familia = Familia.objects.get(id=especieJson['familia'])
+                    especie.formaBiologica = FormaBiologica.objects.get(id=especieJson['formaBiologica'])
+                    especie.tipoBiologico = TipoBiologico.objects.get(id=especieJson['tipoBiologico'])
+                    especie.estadoDeConservacion = EstadoDeConservacion.objects.get(id=especieJson['estadoDeConservacion'])
+                    especie.distribucionGeografica = DistribucionGeografica.objects.get(id=especieJson['distribucionGeografica'])
+                    especie.indiceDeCalidad = especieJson["indiceDeCalidad"]
+                    especie.forrajera = especieJson["forrajera"]
+                    especie.salvar()
             else:
-                familia = resultado[0]
-            familiaJson["id_servidor"] = familia.id
-            familiaJson["nombre"] = familia.nombre
-            especies.append(familiaJson)
-            claves.append(familiaJson["id_servidor"])
+                especie = resultado[0]
+            
+            especieJson["id_servidor"] = especie.id
+            especieJson["nombre"] = especie.nombre
+            especieJson["imagen"] = especie.imagen
+            especies.append(especieJson)
+            claves.append(especieJson["id_servidor"])
 
         especiesCompletas = filter(lambda x: x.id not in claves, self.objects.all())
-        diccionarioDatos = map(lambda x:{"id_servidor":x.id,"nombre":x.nombre},especiesCompletas)
+        diccionarioDatos = map(lambda x:{"id_servidor":x.id,"nombre":x.nombre,"familia":x.familia.id,"formaBiologica":x.formaBiologica.id,"tipoBiologico":x.tipoBiologico.id,"estadoDeConservacion":x.estadoDeConservacion.id,"distribucionGeografica":x.distribucionGeografica.id,"indiceDeCalidad":x.indiceDeCalidad,"forrajera":x.forrajera,"imagen":x.imagen},especiesCompletas)
         diccionarioDatos += especies
         
         return json.dumps(diccionarioDatos)
@@ -321,7 +304,7 @@ class Especie(models.Model):
         self.estadoDeConservacion = EstadoDeConservacion.objects.get(nombre=datos["estado"])
         self.forrajera = datos["forrajera"]
         imagen = datos["imagen"];
-        if imagen != "null":
+        if imagen != "":
             base64_image = str(imagen).split(',')[1]
             imgfile = open('/'.join([settings.TEMP_DIR, self.nombre+'.png' ]), 'w+b')
             imgfile.write(base64.decodestring(base64_image))
@@ -334,7 +317,7 @@ class Especie(models.Model):
             imagen= f.crop((x,y,x+ancho,y+alto))
             imagen = imagen.resize((450, 450), Image.ANTIALIAS)
            
-            ipdb.set_trace()
+            
 #            self.imagen = base64.b64encode(imagen.tostring())
            # self.imagen = imagen.tostring()
 
@@ -370,22 +353,9 @@ class Especie(models.Model):
         return self.nombre
 
 
-#    db.transaction(function (t) {
-#	 	t.executeSql('CREATE TABLE IF NOT EXISTS Planta(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,idTransecta INTEGER NOT NULL,fecha INT NOT NULL,idPunto INTEGER,nombreEspecie TEXT NOT NULL, estadoFenologico TEXT,toques INTEGER NOT NULL, foto TEXT, FOREIGN KEY (nombreEspecie) REFERENCES Especie(nombre),FOREIGN KEY(idTransecta,fecha) REFERENCES Visita(idTransecta,fecha),FOREIGN KEY (idPunto) REFERENCES Punto(id));', [], null, null);
-#    });
-
-class Planta(models.Model):
-	visita = models.ForeignKey(Visita,on_delete=models.PROTECT)
-	especie = models.ForeignKey(Especie,on_delete=models.PROTECT)
-	estadoFenologico = models.CharField(max_length=200)
-	toques = models.IntegerField(default=0)
-	foto = models.CharField(max_length=100000)
-
 # 	db.transaction(function (t) {
 #     t.executeSql('CREATE TABLE IF NOT EXISTS TipoSuelo(nombre TEXT NOT NULL, PRIMARY KEY (nombre));', [], null, null);
 # 	});
-
-
 class TipoSuelo(models.Model):
     nombre = models.CharField(max_length=200,unique=True)
 
@@ -421,17 +391,6 @@ class TipoSuelo(models.Model):
             
     def __unicode__(self):
         return self.nombre
-
-
-# 	db.transaction(function (t) {
-#     t.executeSql('CREATE TABLE IF NOT EXISTS Punto(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, idTransecta INTEGER NOT NULL, fecha INT NOT NULL, coordenada TEXT, estadoPunto TEXT NOT NULL, tipoSuelo TEXT NOT NULL, FOREIGN KEY (tipoSuelo) REFERENCES TipoSuelo(nombre),FOREIGN KEY (idTransecta, fecha) REFERENCES Visita(idTransecta,fecha));', [], null, null);
-# 	});
-
-class Punto(models.Model):
-	visita = models.ForeignKey(Visita,on_delete=models.PROTECT)
-	suelo = models.ForeignKey(TipoSuelo,on_delete=models.PROTECT)
-	coordenada = models.CharField(max_length=200)
-	estadoPunto = models.CharField(max_length=200)
 
 
 # 	db.transaction(function (t) {
@@ -474,10 +433,30 @@ class Nuemrico(TipoPropiedad):
 # 	});
 
 
+tiposPropiedades = {"simple":lambda x:(TipoPropiedad.objects.get(id=x["idPadre"])),"rango":lambda x:(Rango(id=x["id"],valorMax=x["valorMax"],valorMin=x["valorMin"])),"enumerado":lambda x:(Enumerado(id=x["id"],valores=str(x["valores"]).replace("'","").replace("[","").replace("]","")
+))}
+
+
 class Propiedad(models.Model):
-	tipoPropiedad = models.ForeignKey(TipoPropiedad,on_delete=models.PROTECT)
-	nombre = models.CharField(max_length=100)
-	descripcion = models.CharField(max_length=200)
+    tipoPropiedad = models.ForeignKey(TipoPropiedad,on_delete=models.PROTECT)
+    nombre = models.CharField(max_length=100)
+    descripcion = models.CharField(max_length=200)
+
+    @classmethod
+    def obtenerElementos(self,datos):
+        
+        propiedad = Propiedad(nombre=datos['nombre'],descripcion=datos["descripcion"])
+        tipoPropiedad = tiposPropiedades[datos['tiposPropiedad']['tipo']](datos['tiposPropiedad'])
+        tipoPropiedad.save()
+        propiedad.tipoPropiedad = tipoPropiedad
+        #ipdb.set_trace()
+        propiedad.save()
+        datos["id_servidor"] = propiedad.id
+        datos["tiposPropiedad"]["id_servidor"] = tipoPropiedad.id
+        return json.dumps(datos)
+
+    def __unicode__(self):
+        return self.nombre
 
 
 # 	db.transaction(function (t) {
@@ -489,20 +468,18 @@ class TipoEjemplar(models.Model):
     descripcion = models.CharField(max_length=200)
     propiedades = models.ManyToManyField(Propiedad)
 
+    @classmethod
+    def obtenerElementos(self,datos):
+        tipoEjemplar = TipoEjemplar(nombre=datos["nombre"],descripcion=datos["descripcion"])
+        tipoEjemplar.save()
+        for campo in datos["campos"]:
+            propiedad = Propiedad.objects.get(id=campo)
+            tipoEjemplar.propiedades.add(propiedad)
+        datos["id_servidor"] = tipoEjemplar.id
+        return json.dumps(datos)
 
-
-# 	db.transaction(function (t) {
-#     t.executeSql('CREATE TABLE IF NOT EXISTS Ejemplar(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,idTipoEjemplar INTEGER NOT NULL,idTransecta INTEGER NOT NULL, idPunto INTEGER,fecha INT NOT NULL, foto TEXT,FOREIGN KEY (idTipoEjemplar) REFERENCES TipoEjemplar(id),FOREIGN KEY (idPunto) REFERENCES Punto(id),FOREIGN KEY(idTransecta,fecha) REFERENCES Visita(idTransecta,fecha));', [], null, null);
-# 	});
-
-class Ejemplar(models.Model):
-	tipoEjemplar = models.ForeignKey(TipoEjemplar,on_delete=models.PROTECT)
-	transecta = models.ForeignKey(Transecta,blank=True, null=True,on_delete=models.PROTECT)
-	punto = models.ForeignKey(Punto,blank=True, null=True,on_delete=models.PROTECT)
-	foto = models.CharField(max_length=200)
-#	valores = models.ManyToManyField(Valor)
-
-
+    def __unicode__(self):
+        return self.nombre
 
 
 
@@ -512,11 +489,127 @@ class Ejemplar(models.Model):
 
 
 
-# 	db.transaction(function (t) {
+#    db.transaction(function (t) {
+#        t.executeSql('CREATE TABLE IF NOT EXISTS Campania(nombre TEXT NOT NULL,descripcion TEXT, fecha INT NOT NULL, PRIMARY KEY(nombre,fecha));', [], null, null);
+#    });
+
+class Campania(models.Model):
+    nombre = models.CharField(max_length=200)
+    fecha = models.IntegerField()
+    descripcion = models.CharField(max_length=200)
+    tiposEjemplares = models.ManyToManyField(TipoEjemplar)
+    class Meta:
+        unique_together = ("nombre", "fecha")
+
+    @classmethod
+    def obtenerElementos(self,datos):
+        campania = Campania(nombre=datos["nombre"],descripcion=datos["descripcion"],fecha=datos["fecha"])
+        campania.save()
+        for idTipoEjemplar in datos["tiposEjemplaresAsociados"]:
+            tipoEjemplar = TipoEjemplar.objects.get(id=idTipoEjemplar)
+            campania.tiposEjemplares.add(tipoEjemplar)
+        #ipdb.set_trace()
+        datos["id_servidor"] = campania.id
+        return json.dumps(datos)
+
+    def __unicode__(self):
+        return self.nombre
+
+#     db.transaction(function (t) {
+#         t.executeSql('CREATE TABLE IF NOT EXISTS Transecta(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,nombreCampania TEXT NOT NULL,cuadro TEXT,fechaCampania INT NOT NULL,sentido FLOAT NOT NULL,ambiente TEXT NOT NULL,distanciaEntrePuntos INT NOT NULL, FOREIGN KEY (nombreCampania) REFERENCES Campania(nombre),FOREIGN KEY (fechaCampania) REFERENCES Campania(fecha));', [], null, null);
+#     });
+
+class Transecta(models.Model):
+    cuadro = models.CharField(max_length=200, null=True)
+    sentido = models.FloatField()
+    ambiente = models.CharField(max_length=200)
+    distanciaEntrePuntos = models.IntegerField(default=3)
+    campania = models.ForeignKey(Campania, on_delete=models.PROTECT)
+
+    @classmethod
+    def obtenerElementos(self,datos):
+        campania = Campania.objects.get(id=datos["campania"])
+        transecta = Transecta(cuadro=datos["cuadro"],sentido=datos["sentido"],ambiente=datos["ambiente"],distanciaEntrePuntos=datos["distanciaEntrePuntos"],campania=campania)
+        transecta.save()
+        #ipdb.set_trace()
+        datos["id_servidor"] = transecta.id
+        return json.dumps(datos)
+
+
+    def __unicode__(self):
+        return self.ambiente
+
+
+#     db.transaction(function (t) {
+#         t.executeSql('CREATE TABLE IF NOT EXISTS Visita(idTransecta INTEGER NOT NULL ,fecha INT NOT NULL,FOREIGN KEY (idTransecta) REFERENCES Transecta(id), PRIMARY KEY (idTransecta,fecha));', [], null, null);
+#     });
+
+class Visita(models.Model):
+    transecta = models.ForeignKey(Transecta,on_delete=models.PROTECT)
+    fecha = models.IntegerField()
+    class Meta:
+        unique_together = ("transecta", "fecha")
+
+    @classmethod
+    def obtenerElementos(self,datos):
+        transecta = Transecta.objects.get(id=datos["transecta"])
+        visita = Visita(fecha=datos["fecha"],transecta=transecta)
+        visita.save()
+        #ipdb.set_trace()
+        datos["id_servidor"] = visita.id
+        return json.dumps(datos)
+
+
+    def __unicode__(self):
+        return datetime.datetime.fromtimestamp(self.fecha/1000).__str__()
+
+
+#    db.transaction(function (t) {
+#       t.executeSql('CREATE TABLE IF NOT EXISTS Planta(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,idTransecta INTEGER NOT NULL,fecha INT NOT NULL,idPunto INTEGER,nombreEspecie TEXT NOT NULL, estadoFenologico TEXT,toques INTEGER NOT NULL, foto TEXT, FOREIGN KEY (nombreEspecie) REFERENCES Especie(nombre),FOREIGN KEY(idTransecta,fecha) REFERENCES Visita(idTransecta,fecha),FOREIGN KEY (idPunto) REFERENCES Punto(id));', [], null, null);
+#    });
+
+class Planta(models.Model):
+    visita = models.ForeignKey(Visita,on_delete=models.PROTECT)
+    especie = models.ForeignKey(Especie,on_delete=models.PROTECT)
+    estadoFenologico = models.CharField(max_length=200)
+    toques = models.IntegerField(default=0)
+    foto = models.CharField(max_length=10000000)
+
+
+#   db.transaction(function (t) {
+#     t.executeSql('CREATE TABLE IF NOT EXISTS Punto(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, idTransecta INTEGER NOT NULL, fecha INT NOT NULL, coordenada TEXT, estadoPunto TEXT NOT NULL, tipoSuelo TEXT NOT NULL, FOREIGN KEY (tipoSuelo) REFERENCES TipoSuelo(nombre),FOREIGN KEY (idTransecta, fecha) REFERENCES Visita(idTransecta,fecha));', [], null, null);
+#   });
+
+class Punto(models.Model):
+    visita = models.ForeignKey(Visita,on_delete=models.PROTECT)
+    suelo = models.ForeignKey(TipoSuelo,on_delete=models.PROTECT)
+    coordenada = models.CharField(max_length=200)
+    estadoPunto = models.CharField(max_length=200)
+
+
+#   db.transaction(function (t) {
+#     t.executeSql('CREATE TABLE IF NOT EXISTS Ejemplar(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,idTipoEjemplar INTEGER NOT NULL,idTransecta INTEGER NOT NULL, idPunto INTEGER,fecha INT NOT NULL, foto TEXT,FOREIGN KEY (idTipoEjemplar) REFERENCES TipoEjemplar(id),FOREIGN KEY (idPunto) REFERENCES Punto(id),FOREIGN KEY(idTransecta,fecha) REFERENCES Visita(idTransecta,fecha));', [], null, null);
+#   });
+
+class Ejemplar(models.Model):
+    tipoEjemplar = models.ForeignKey(TipoEjemplar,on_delete=models.PROTECT)
+    transecta = models.ForeignKey(Transecta,blank=True, null=True,on_delete=models.PROTECT)
+    punto = models.ForeignKey(Punto,blank=True, null=True,on_delete=models.PROTECT)
+    foto = models.CharField(max_length=10000000)
+#   valores = models.ManyToManyField(Valor)
+
+
+#   db.transaction(function (t) {
 #     t.executeSql('CREATE TABLE IF NOT EXISTS Valor(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, idPropiedad INTEGER NOT NULL, idEjemplar INTEGER NOT NULL, valor TEXT NOT NULL, FOREIGN KEY (idPropiedad) REFERENCES Propiedad(id),FOREIGN KEY (idEjemplar) REFERENCES Ejemplar(id));', [], null, null);
-# 	});
+#   });
 
 class Valor(models.Model):
-	propiedad = models.ForeignKey(Propiedad,on_delete=models.PROTECT)
-	ejemplar = models.ForeignKey(Ejemplar,on_delete=models.PROTECT)
-	valor = models.CharField(max_length=200)
+    propiedad = models.ForeignKey(Propiedad,on_delete=models.PROTECT)
+    ejemplar = models.ForeignKey(Ejemplar,on_delete=models.PROTECT)
+    valor = models.CharField(max_length=200)
+
+
+# Imagenes asociadas a las visitas de una transecta
+class ImagenVisita(models.Model):
+    foto = models.CharField(max_length=10000000)
+    visita = models.ForeignKey(Visita,on_delete=models.PROTECT)
