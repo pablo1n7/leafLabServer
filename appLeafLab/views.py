@@ -12,7 +12,7 @@ from models import *
 
 # Create your views here.
 
-elementosSimples = {"visita":Visita,"transecta":Transecta,"campania":Campania,"tipoEjemplar":TipoEjemplar,"propiedad":Propiedad,"especie":Especie,"suelo":TipoSuelo,"dist":DistribucionGeografica,"familia":Familia ,"forma":FormaBiologica,"tipo":TipoBiologico,"estado":EstadoDeConservacion}
+elementosSimples = {"punto":Punto,"valor":Valor,"planta":Planta,"ejemplar":Ejemplar,"visita":Visita,"transecta":Transecta,"campania":Campania,"tipoEjemplar":TipoEjemplar,"propiedad":Propiedad,"especie":Especie,"suelo":TipoSuelo,"dist":DistribucionGeografica,"familia":Familia ,"forma":FormaBiologica,"tipo":TipoBiologico,"estado":EstadoDeConservacion}
 
 def index(request):
 	return render_to_response('views/index.html')
@@ -25,7 +25,7 @@ def dataBase(request):
 	distribucionesGeograficas = DistribucionGeografica.objects.all()
 	tiposSuelo = TipoSuelo.objects.all()
 	especies = Especie.objects.all()
-	return render_to_response('views/baseDatos.html',{"especies":especies,"familias":familias[1:],"distribucionesGeograficas":distribucionesGeograficas[1:],"tiposSuelo":tiposSuelo[1:],"formasBiologicas":formasBiologicas[1:],"tiposBiologicos":tiposBiologicos[1:],"estadosConservacion":estadosConservacion[1:]})
+	return render_to_response('views/baseDatos.html',{"especies":especies[1:],"familias":familias[1:],"distribucionesGeograficas":distribucionesGeograficas[1:],"tiposSuelo":tiposSuelo[1:],"formasBiologicas":formasBiologicas[1:],"tiposBiologicos":tiposBiologicos[1:],"estadosConservacion":estadosConservacion[1:]})
 
 
 
