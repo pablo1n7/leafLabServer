@@ -108,8 +108,10 @@ _bsn.AutoSuggest = function (fld, param)
 
 	this.fld.setAttribute("autocomplete","off");
 
+
 	$(this.fld).click(function(){
 
+		pointer.fld.value = "";
 
         pointer.setSuggestions(pointer.oP.valores);
         var busqueda = "";
@@ -117,6 +119,9 @@ _bsn.AutoSuggest = function (fld, param)
             busqueda = pointer.fld.value;
         pointer.getSuggestions(busqueda);
     });
+
+
+
 	$(this.fld).blur(function(){
         setTimeout(function(){
             _bsn.DOM.removeElement(pointer.idAs);

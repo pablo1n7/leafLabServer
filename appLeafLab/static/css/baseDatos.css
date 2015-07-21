@@ -110,6 +110,10 @@ tbody tr td:first-child {
 	font-weight: bold;
 }   
 
+table.dataTable {
+    text-align: inherit;
+}
+
 table.dataTable tbody tr {
     background-color: transparent !important;
 }
@@ -256,4 +260,8 @@ tr:has(> td.dataTables_empty){
 
 div:has(a.active){
 	background: black !important;
+}
+
+.jcrop-holder {
+	margin: 0 auto;
 }

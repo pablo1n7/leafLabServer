@@ -4,6 +4,9 @@
 
 {% block estilos %} 
 	<link rel="stylesheet" href="{% static "css/campanias.css" %}">
+	<link rel="stylesheet" href="{% static "ol/css/ol.css" %}">
+	<script src="{% static "ol/js/ol.js" %}"></script>
+
 {% endblock estilos%}
 
 {% block titulo %}
@@ -19,7 +22,7 @@
 {% endblock %}
 
 {% block contenido %}
-<div class="contenedorCampania">
+<div id="map" class="contenedorCampania">
 
 </div>
 	campania

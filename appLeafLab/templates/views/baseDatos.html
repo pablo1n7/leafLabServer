@@ -239,7 +239,11 @@
 
 					<tr>
 						<td scope="row">{{forloop.counter}}</td>
-						<td class="oculto">{{especie.id}}</td>
+						{% if especie.imagen != "" %}
+							<td class="oculto conImagen">{{especie.id}}</td>
+						{% else %}
+						 	<td class="oculto">{{especie.id}}</td>
+						{% endif %}
 						<td>{{especie.nombre}}</td>
 						<td>{{especie.familia.nombre}}</td>
 						<td>{{especie.formaBiologica.nombre}}</td>
@@ -248,6 +252,7 @@
 						<td class="oculto">{{especie.indiceDeCalidad}}</td>
 						<td class="oculto">{{especie.forrajera}}</td>
 						<td class="oculto">{{especie.estadoDeConservacion.nombre}}</td>
+
 
 					</tr>
 				{% endfor %}           

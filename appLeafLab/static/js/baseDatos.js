@@ -93,6 +93,9 @@ $(document).ready(function() {
 	        var familia = $($(row).find("td")[3]).text();
 	        var indice = $($(row).find("td")[7]).text();
 	        var forrajera = $($(row).find("td")[8]).text();
+
+	        
+
 	       
 	        var $contenidoFormulario = clonar($("#modeloCargaEspecie"),"datosEspecie",{"nombre":nombre,"id":id,"forma":forma,"tipo":tipoBiologico,"estado":estado,"distribucion":distribucion,"familia":familia,"indice":indice});
 			lanzarModal("#modalCarga","Editar Especie",$contenidoFormulario,function(){
@@ -105,6 +108,20 @@ $(document).ready(function() {
 				$("#datosEspecie").find("[name|=forrajera]")[0].click();
 			};
 			activarSugerencias(camposAutocompletados,$("#datosEspecie"));
+			ImagenCroop.inicializar("divDragNDrop","divContenedorImagen","imagen","botonCambiarImagen");
+        	$.get( "getImagenEspecie", { "idEspecie": id } )
+			  .done(function( data ) {
+
+			  	if (data!="") {
+			  		setTimeout(function(){
+					    ImagenCroop.instanciarImagen("data:image/jpeg;base64,"+data);
+					    ImagenCroop.selectAll();
+					    ImagenCroop.crooper.disable();
+
+			  		},200);
+				  
+			  	};
+			});
 
 	},function(){
 		//agregarElemento("#modeloCargaEspecie","datosEspecie","Nueva Especie");

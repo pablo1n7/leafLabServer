@@ -4,7 +4,7 @@
 from django.db import models,IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
-import re,ipdb,base64,Image,json, datetime
+import re,ipdb,base64,Image,json, datetime, os
 import uuid
 import base64
 
@@ -23,9 +23,6 @@ class Familia(models.Model):
         familias = []
         claves = []
         for familiaJson in datos:
-            #try:
-            #ipdb.set_trace()
-                #familia = Familia.objects.get(id=familiaJson['id_servidor'])
             resultado = Familia.objects.filter(nombre=familiaJson['nombre'])
             if not resultado:
                 try:
@@ -59,7 +56,7 @@ class Familia(models.Model):
 
     def salvar(self):
         patron = re.compile('^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$',re.IGNORECASE)
-        if(patron.match(self.nombre)):
+        if(patron.match(self.nombre.encode('utf-8'))):
             try:
                 self.save()
                 respuesta = {'codigo': "200",'mensaje':"Operación realizada con exito.",'objeto':{'id':self.id,'nombre':self.nombre}}
@@ -99,7 +96,7 @@ class FormaBiologica(models.Model):
 
     def salvar(self):
         patron = re.compile('^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$',re.IGNORECASE)
-        if(patron.match((u"%s" % self.nombre))):
+        if(patron.match(self.nombre.encode('utf-8'))):
             try:
                 self.save()
                 respuesta = {'codigo': "200",'mensaje':"Operación realizada con exito.",'objeto':{'id':self.id,'nombre':self.nombre}}
@@ -137,7 +134,7 @@ class TipoBiologico(models.Model):
 
     def salvar(self):
         patron = re.compile('^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$',re.IGNORECASE)
-        if(patron.match(self.nombre)):
+        if(patron.match(self.nombre.encode('utf-8'))):
             try:
                 self.save()
                 respuesta = {'codigo': "200",'mensaje':"Operación realizada con exito.",'objeto':{'id':self.id,'nombre':self.nombre}}
@@ -178,7 +175,7 @@ class DistribucionGeografica(models.Model):
 
     def salvar(self):
         patron = re.compile('^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$',re.IGNORECASE)
-        if(patron.match(self.nombre)):
+        if(patron.match(self.nombre.encode('utf-8'))):
             try:
                 self.save()
                 respuesta = {'codigo': "200",'mensaje':"Operación realizada con exito.",'objeto':{'id':self.id,'nombre':self.nombre}}
@@ -218,7 +215,7 @@ class EstadoDeConservacion(models.Model):
 
     def salvar(self):
         patron = re.compile('^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$',re.IGNORECASE)
-        if(patron.match(self.nombre)):
+        if(patron.match(self.nombre.encode('utf-8'))):
             try:
                 self.save()
                 respuesta = {'codigo': "200",'mensaje':"Operación realizada con exito.",'objeto':{'id':self.id,'nombre':self.nombre}}
@@ -262,9 +259,6 @@ class Especie(models.Model):
         especies = []
         claves = []
         for especieJson in datos:
-            #try:
-            #ipdb.set_trace()
-                #familia = Familia.objects.get(id=familiaJson['id_servidor'])
             resultado = self.objects.filter(nombre=especieJson['nombre'])
             if not resultado:
                 try:
@@ -303,7 +297,7 @@ class Especie(models.Model):
         self.indiceDeCalidad = datos["indice"]
         self.estadoDeConservacion = EstadoDeConservacion.objects.get(nombre=datos["estado"])
         self.forrajera = datos["forrajera"]
-        imagen = datos["imagen"];
+        imagen = datos["imagen"]
         if imagen != "":
             base64_image = str(imagen).split(',')[1]
             imgfile = open('/'.join([settings.TEMP_DIR, self.nombre+'.png' ]), 'w+b')
@@ -316,13 +310,12 @@ class Especie(models.Model):
             y= int(float(datos["coodenadasImagen[y]"])*f.size[1])
             imagen= f.crop((x,y,x+ancho,y+alto))
             imagen = imagen.resize((450, 450), Image.ANTIALIAS)
-           
-            
-#            self.imagen = base64.b64encode(imagen.tostring())
-           # self.imagen = imagen.tostring()
-
-
-
+            import cStringIO
+            imgBuffer = cStringIO.StringIO()
+            imagen.save(imgBuffer, format="JPEG")
+            imgStr = base64.b64encode(imgBuffer.getvalue())
+            self.imagen = imgStr
+            os.remove('/'.join([settings.TEMP_DIR, self.nombre+'.png' ]))
         
 
     def eliminar(self):
@@ -338,7 +331,7 @@ class Especie(models.Model):
 
     def salvar(self):
         patron = re.compile('^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$',re.IGNORECASE)
-        if(patron.match(self.nombre)):
+        if(patron.match(self.nombre.encode('utf-8'))):
             try:
                 self.save() 
                 respuesta = {'codigo': "200",'mensaje':"Operación realizada con exito.",'objeto':{'id':self.id,'nombre':self.nombre}}
@@ -378,7 +371,7 @@ class TipoSuelo(models.Model):
 
     def salvar(self):
         patron = re.compile('^([a-zñáéíóú]+)([a-zñáéíóú0-9 ]+)$',re.IGNORECASE)
-        if(patron.match(self.nombre)):
+        if(patron.match(self.nombre.encode('utf-8'))):
             try:
                 self.save()
                 respuesta = {'codigo': "200",'mensaje':"Operación realizada con exito.",'objeto':{'id':self.id,'nombre':self.nombre}}
@@ -495,7 +488,7 @@ class TipoEjemplar(models.Model):
 
 class Campania(models.Model):
     nombre = models.CharField(max_length=200)
-    fecha = models.IntegerField()
+    fecha = models.BigIntegerField()
     descripcion = models.CharField(max_length=200)
     tiposEjemplares = models.ManyToManyField(TipoEjemplar)
     class Meta:
@@ -546,7 +539,7 @@ class Transecta(models.Model):
 
 class Visita(models.Model):
     transecta = models.ForeignKey(Transecta,on_delete=models.PROTECT)
-    fecha = models.IntegerField()
+    fecha = models.BigIntegerField()
     class Meta:
         unique_together = ("transecta", "fecha")
 
@@ -570,6 +563,7 @@ class Visita(models.Model):
 class Punto(models.Model):
     visita = models.ForeignKey(Visita,on_delete=models.PROTECT)
     suelo = models.ForeignKey(TipoSuelo,on_delete=models.PROTECT)
+    orden = models.IntegerField()
     coordenada = models.CharField(max_length=200)
     estadoPunto = models.CharField(max_length=200)
 
@@ -577,7 +571,8 @@ class Punto(models.Model):
     def obtenerElementos(self,datos):
         visita = Visita.objects.get(id=datos["visita"])
         suelo = TipoSuelo.objects.get(id=datos["suelo"])
-        punto = Punto(visita=visita,suelo=suelo, coordenada=datos["coordenadas"],estadoPunto=datos["estado"])
+        orden = datos["orden"]
+        punto = Punto(visita=visita,suelo=suelo, coordenada=datos["coordenadas"],estadoPunto=datos["estado"],orden=orden)
         punto.save()
         datos["id_servidor"] = punto.id
         return json.dumps(datos)
@@ -633,6 +628,7 @@ class Ejemplar(models.Model):
 
     @classmethod
     def obtenerElementos(self,datos):
+        # ipdb.set_trace()
         punto = None
         visita = Visita.objects.get(id=datos["visita"]);
         tipoEjemplar = TipoEjemplar.objects.get(id=datos["tipoEjemplar"]);

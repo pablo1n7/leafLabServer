@@ -12,7 +12,7 @@ from models import *
 
 # Create your views here.
 
-elementosSimples = {"punto":Punto,"valor":Valor,"planta":Planta,"ejemplar":Ejemplar,"visita":Visita,"transecta":Transecta,"campania":Campania,"tipoEjemplar":TipoEjemplar,"propiedad":Propiedad,"especie":Especie,"suelo":TipoSuelo,"dist":DistribucionGeografica,"familia":Familia ,"forma":FormaBiologica,"tipo":TipoBiologico,"estado":EstadoDeConservacion}
+elementosSimples = {"imagenVisita":ImagenVisita,"punto":Punto,"valor":Valor,"planta":Planta,"ejemplar":Ejemplar,"visita":Visita,"transecta":Transecta,"campania":Campania,"tipoEjemplar":TipoEjemplar,"propiedad":Propiedad,"especie":Especie,"suelo":TipoSuelo,"dist":DistribucionGeografica,"familia":Familia ,"forma":FormaBiologica,"tipo":TipoBiologico,"estado":EstadoDeConservacion}
 
 def index(request):
 	return render_to_response('views/index.html')
@@ -88,3 +88,23 @@ def bajaElementoSimple(request):
 		jsondata = json.dumps(elemento.eliminar())
 		return HttpResponse(jsondata)
 
+
+
+
+@csrf_exempt
+def subirImagenes(request):	
+	#ipdb.set_trace()
+	visita = Visita.objects.get(id=request.POST.get('visita'))
+	file_obj = request.FILES['imagen']
+	ruta = '/'.join([settings.IMG_DIR, file_obj.name ])
+	arch = open(ruta, 'w+b')
+	for chunk in file_obj.chunks():
+		arch.write(chunk)
+	imagenVisita = ImagenVisita(visita=visita,foto=ruta)
+	imagenVisita.save()
+	return HttpResponse(len(file_obj))
+
+@csrf_exempt
+def obtenerImagenEspecie(request):
+	especie = Especie.objects.get(id=request.GET.get("idEspecie"))
+	return HttpResponse(especie.imagen)

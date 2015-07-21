@@ -30,24 +30,27 @@ var ImagenCroop = (function(){
 			}, true);
 		};
 
+	var instanciarImagen = function(src){
+		ImagenCroop.hayImagen = true;
+		$("#"+ImagenCroop.idImagen).attr("src",src);
+		$("#"+ImagenCroop.idContenedorImagen).removeClass("oculto");
+		$("#"+ImagenCroop.idDroper).addClass("oculto");
+        ImagenCroop.crooper = jQuery.Jcrop($("#"+ImagenCroop.idImagen)[0],{
+            bgColor:     "black",
+            bgOpacity:   .4,
+            setSelect:   [ 200, 200, 300, 300 ],
+            aspectRatio: 1
+        });
+	};
+
 	var cargarImagen = function(imagen){
 			if(!imagen.type.match(/image.*/)){
 				mostrarMensajeError("El Elemento seleccionado no es una imagen!: "+ imagen.type);
 				return;
 			}
-			$("#"+ImagenCroop.idDroper).addClass("oculto");
-			ImagenCroop.hayImagen = true;
 			var reader = new FileReader();
 			reader.onload = function(e){
-				$("#"+ImagenCroop.idImagen).attr("src",e.target.result);
-				$("#"+ImagenCroop.idContenedorImagen).removeClass("oculto");
-		        ImagenCroop.crooper = jQuery.Jcrop($("#"+ImagenCroop.idImagen)[0],{
-		            bgColor:     "black",
-		            bgOpacity:   .4,
-		            setSelect:   [ 200, 200, 300, 300 ],
-		            aspectRatio: 1
-		        });
-
+				ImagenCroop.instanciarImagen(e.target.result)
 			};
 			reader.readAsDataURL(imagen);
 		};
@@ -60,6 +63,13 @@ var ImagenCroop = (function(){
 			$("#"+ImagenCroop.idDroper).removeClass("oculto");
 		};
 
+	var selectAll = function(){
+		var alto = $("#"+ImagenCroop.idImagen).height();
+		var ancho = $("#"+ImagenCroop.idImagen).width();
+		ImagenCroop.crooper.setSelect([0,0,ancho,alto]);
+
+	};
+
 	var obtenerImagen = function(){
 		if(ImagenCroop.hayImagen)
 			return $("#"+ImagenCroop.idImagen).attr("src");
@@ -70,10 +80,18 @@ var ImagenCroop = (function(){
 			var coord = ImagenCroop.crooper.tellSelect();
 			var altoImg = $("#"+ImagenCroop.idImagen).height();
 			var anchoImg = $("#"+ImagenCroop.idImagen).width();
-			var x = (coord.x / anchoImg);
-			var y = (coord.y / altoImg);
-			var ancho = (coord.w / anchoImg);
-			var alto = (coord.h / altoImg);
+
+			if((isNaN(coord.x2) && isNaN(coord.y2)) || (coord.y2 == coord.y) && (coord.x2 == coord.x) ){
+				var x = 0;
+				var y = 0;
+				var ancho = 1;
+				var alto = 1;
+			}else{
+				var x = (coord.x / anchoImg);
+				var y = (coord.y / altoImg);
+				var ancho = (coord.w / anchoImg);
+				var alto = (coord.h / altoImg);
+			}
 			return{
 				x:x,
 				y:y,
@@ -87,6 +105,8 @@ var ImagenCroop = (function(){
 		activarCargaImagen:activarCargaImagen,
 		activarDropImagen:activarDropImagen,
 		cargarImagen:cargarImagen,
+		selectAll:selectAll,
+		instanciarImagen:instanciarImagen,
 		obtenerCoordenadas:obtenerCoordenadas,
 		obtenerImagen:obtenerImagen,
 		hayImagen:hayImagen,

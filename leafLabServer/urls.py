@@ -32,6 +32,8 @@ urlpatterns = [
     url(r'^administracion', views.administracionDeDatos,name="administracionDeDatos"),
     url(r'^sinc', views.sincronizar,name="sincronizar"),
     url(r'^quienSos', views.identidad,name="identidad"),
+    url(r'^subirImagen', views.subirImagenes,name="subirImagen"),
+    url(r'^getImagenEspecie', views.obtenerImagenEspecie,name="getImagenEspecie"),
     url(r'^', views.index,name="index")
     
 

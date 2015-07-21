@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 """
 Django settings for leafLabServer project.
 
@@ -9,7 +11,7 @@ https://docs.djangoproject.com/en/1.8/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
-#encoding:utf-8
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -76,12 +78,29 @@ WSGI_APPLICATION = 'leafLabServer.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'dbLeafLab.sqlite3'),
+#     },
+#     'OPTIONS': {
+#     # ...
+#         'timeout': 30,
+#     # ...
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'dbLeafLab.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dbRelevamientoFloristico',
+        'USER': 'postgres',
+        'PASSWORD': 'pablo',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 
 # Agregando los templates propios
@@ -116,3 +135,5 @@ STATICFILES_DIRS = [
 ]
 
 TEMP_DIR = "appLeafLab/static/temp"
+
+IMG_DIR = "appLeafLab/static/imagenes"
