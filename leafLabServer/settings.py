@@ -136,4 +136,5 @@ STATICFILES_DIRS = [
 
 TEMP_DIR = "appLeafLab/static/temp"
 
-IMG_DIR = "appLeafLab/static/imagenes"
+VISITA_DIR = "appLeafLab/static/imagenes/visita"
+ITEM_DIR = "appLeafLab/static/imagenes/item"

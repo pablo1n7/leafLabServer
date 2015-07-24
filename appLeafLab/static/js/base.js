@@ -10,6 +10,9 @@ $(document).ready(function(){
 	  
 });
 
+
+
+
 function mostrarMensajeExito(mensaje){
 	alertify.success('<i class="fa fa-check"></i>  '+mensaje);
 }

@@ -552,6 +552,10 @@ class Visita(models.Model):
         datos["id_servidor"] = visita.id
         return json.dumps(datos)
 
+    def guardarImagen(self,ruta):
+        imagenVisita = ImagenVisita(visita=self,foto=ruta)
+        imagenVisita.save()
+
 
     def __unicode__(self):
         return datetime.datetime.fromtimestamp(self.fecha/1000).__str__()
@@ -607,6 +611,10 @@ class Planta(models.Model):
         planta.save()
         datos["id_servidor"] = planta.id
         return json.dumps(datos)
+
+    def guardarImagen(self,ruta):
+        self.foto = ruta
+        self.save()
         
 
 
@@ -639,6 +647,10 @@ class Ejemplar(models.Model):
         ejemplar.save()
         datos["id_servidor"] = ejemplar.id
         return json.dumps(datos)
+
+    def guardarImagen(self,ruta):
+        self.foto = ruta
+        self.save()
 
 
     def __unicode__(self):

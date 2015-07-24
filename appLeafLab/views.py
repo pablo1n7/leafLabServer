@@ -13,6 +13,7 @@ from models import *
 # Create your views here.
 
 elementosSimples = {"imagenVisita":ImagenVisita,"punto":Punto,"valor":Valor,"planta":Planta,"ejemplar":Ejemplar,"visita":Visita,"transecta":Transecta,"campania":Campania,"tipoEjemplar":TipoEjemplar,"propiedad":Propiedad,"especie":Especie,"suelo":TipoSuelo,"dist":DistribucionGeografica,"familia":Familia ,"forma":FormaBiologica,"tipo":TipoBiologico,"estado":EstadoDeConservacion}
+rutaBase = {'visita':settings.VISITA_DIR,'ejemplar':settings.ITEM_DIR+"/ejemplar",'planta':settings.ITEM_DIR+"/planta"}
 
 def index(request):
 	return render_to_response('views/index.html')
@@ -44,12 +45,16 @@ def administracionDeDatos(request):
 @csrf_exempt
 def sincronizar(request):
 	# if request.is_ajax():
+
 	if request.method == 'GET':
 		#Elementos que solo se sincronizando en un sentido.(del servidor hacia la aplicacion)
 		usuario = request.GET.get("identidad")
 		tipoElemento = request.GET.get("nombre")
 		return HttpResponse(elementosSimples[tipoElemento].obtenerElementos())	
 	else:
+		print "----------------------------------------"
+		print request.POST
+		print "----------------------------------------"
 		usuario = request.POST.get("identidad")
 		tipoElemento = request.POST.get("nombre")
 		datos = json.loads(request.POST.get("datos"))
@@ -60,7 +65,9 @@ def sincronizar(request):
 def identidad(request):
 	nombrePC = socket.gethostname()
 	ipPC = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
-	jsondata = json.dumps({'nombrePC': nombrePC,'ip':ipPC})
+	cantEspecies = Especie.objects.all().count()
+	cantFamilias = Familia.objects.all().count()
+	jsondata = json.dumps({'nombrePC': nombrePC,'ip':ipPC,'infoAdicional':{"especies":cantEspecies,"familias":cantFamilias}})
 	return HttpResponse(jsondata)
 
 @csrf_exempt
@@ -93,15 +100,21 @@ def bajaElementoSimple(request):
 
 @csrf_exempt
 def subirImagenes(request):	
-	#ipdb.set_trace()
-	visita = Visita.objects.get(id=request.POST.get('visita'))
+	
+#	visita = Visita.objects.get(id=request.POST.get('visita'))
+	tipoElemento = elementosSimples[request.POST.get("nombre").lower()]
+	elemento = tipoElemento.objects.get(id=request.POST.get('id_servidor'))
 	file_obj = request.FILES['imagen']
-	ruta = '/'.join([settings.IMG_DIR, file_obj.name ])
+	carpeta = '/'.join([rutaBase[request.POST.get("nombre").lower()],request.POST.get('id_servidor')])
+	if not os.path.exists(carpeta): 
+		os.makedirs(carpeta)
+	#ruta = '/'.join([rutaBase[request.POST.get("nombre").lower()],request.POST.get("identidad"),request.POST.get('id_servidor'),file_obj.name])
+	ruta = carpeta+"/"+file_obj.name
 	arch = open(ruta, 'w+b')
 	for chunk in file_obj.chunks():
 		arch.write(chunk)
-	imagenVisita = ImagenVisita(visita=visita,foto=ruta)
-	imagenVisita.save()
+
+	elemento.guardarImagen(ruta)
 	return HttpResponse(len(file_obj))
 
 @csrf_exempt
