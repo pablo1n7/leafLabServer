@@ -1,5 +1,72 @@
 {% extends "base.html" %}
 
+
+
+{% load staticfiles %}
+
+{% block estilos %} 
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static "autosuggest/css/autosuggest.css" %}">
+	<link rel="stylesheet" href="{% static "css/baseDatos.css" %}">
+	<link rel="stylesheet" href="{% static "css/index.css" %}">
+	<link rel="stylesheet" href="{% static "perfect-scrollbar/css/perfect-scrollbar.css" %}">
+{% endblock estilos%}
+
+{% block script %}
+	<script src="{% static "perfect-scrollbar/js/perfect-scrollbar.jquery.js" %}"></script>
+	<script src="{% static "autosuggest/js/autosuggest.js" %}"></script>
+	<script src="{% static "js/index.js" %}"></script>
+
+	<script src="https://maps.googleapis.com/maps/api/js?v=3&libraries=drawing&sensor=false" type="text/javascript"></script>
+
+
+
+{% endblock script%}
+
 {% block titulo %}
-	Este es el index
+	LeafLab
 {% endblock %}
+
+
+
+{% block contenido%}
+<div id="contenedorDatos" class="contenedorDatos">
+	<div id="navegacion" class="navegacion">
+		<div id="estadoNavegacion" class="izquierda">
+			<a id="listarCampanias" >Inicio</a>
+			<a id="campaniaActiva" class="itemNavegacion" > /</a>
+			<a id="transectaActiva" class="itemNavegacion" ></a>
+			<a id="visitaActiva" class="itemNavegacion" ></a>
+			<a id="puntoActivo" class="itemNavegacion" ></a>
+		</div>
+	</div>
+	<div id="contenedorDetallePunto" class="list-group contenedorDetallePunto contenedorFlexible"></div>
+	<div id="contenedorPuntos" class="list-group contenedorPuntos contenedorFlexible"></div>
+	<div id="contenedorVisitas" class="list-group contenedorVisitas contenedorFlexible"></div>
+	<div id="contenedorTransectas" class="list-group contenedorTransectas contenedorFlexible"></div>
+	<div id="contenedorCampanias" class="list-group contenedorCampanias contenedorFlexible">
+		{% if campanias.count != 0 %}
+			{% for camp in campanias %}
+				<a class="list-group-item" id="campania-{{camp.id}}">
+					<h4 class="list-group-item-heading">{{camp.nombre}}</h4>
+					<p class="list-group-item-text"> <b> Fecha: </b> {{camp.obtenerFecha}}, <b>Cantidad de Transectas: </b> {{camp.obtenerCantidadTransectas}} <br> <b> Descripción: </b> {{camp.obtenerDescripcion}} </p>
+				</a>
+			{% endfor %}
+		{% else %}
+			<a class="list-group-item">
+				<h4 class="list-group-item-heading">Sin Datos que mostrar</h4>
+				<p class="list-group-item-text">Esta Transecta no contiene Visitas</p>
+			</a>
+		{% endif %}
+	</div>
+</div>
+<div class="contenedorDatosAsociados">
+	<div id="mapa" class="informacionAsociada"></div>
+	<div id="infoVisita" class="informacionAsociada oculto list-group-item">
+		<div id="contenedorAdjuntosVisita" class="list-group contenedorAdjuntos contenedorFlexible"></div>
+		<div id="contenedorImagenes" class="contenedorImagenes"></div>
+	</div>
+</div>
+
+
+{% endblock contenido%}

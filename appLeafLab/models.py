@@ -494,6 +494,18 @@ class Campania(models.Model):
     class Meta:
         unique_together = ("nombre", "fecha")
 
+    def obtenerDescripcion(self):
+        if self.descripcion == "":
+            return "Sin Descripción"
+        return self.descripcion
+
+    def obtenerFecha(self):
+        fecha = datetime.datetime.fromtimestamp(self.fecha/1000)
+        return fecha.strftime('%d/%m/%Y %H:%M')
+
+    def obtenerCantidadTransectas(self):
+        return len(Transecta.objects.filter(campania=self))
+
     @classmethod
     def obtenerElementos(self,datos):
         campania = Campania(nombre=datos["nombre"],descripcion=datos["descripcion"],fecha=datos["fecha"])
@@ -519,6 +531,26 @@ class Transecta(models.Model):
     distanciaEntrePuntos = models.IntegerField(default=3)
     campania = models.ForeignKey(Campania, on_delete=models.PROTECT)
 
+    def obtenerCuadro(self):
+        if self.cuadro == "":
+            return "Información de cuadro no proporcionada"
+        return self.cuadro
+
+    def obtenerSentido(self):
+        return int(self.sentido)
+
+    def obtenerCantidadVisitas(self):
+        return len(Visita.objects.filter(transecta=self))
+
+    def obtenerCoordenadas(self):
+        try:
+            visita = Visita.objects.filter(transecta=self)[0]
+            puntos = Punto.objects.filter(visita=visita).order_by('orden')
+            coordenadas = puntos[0].coordenada+","+puntos.reverse()[0].coordenada
+        except Exception, e:
+            coordenadas = "0,0"
+        return coordenadas
+
     @classmethod
     def obtenerElementos(self,datos):
         campania = Campania.objects.get(id=datos["campania"])
@@ -542,6 +574,23 @@ class Visita(models.Model):
     fecha = models.BigIntegerField()
     class Meta:
         unique_together = ("transecta", "fecha")
+
+
+    def obtenerFecha(self):
+        fecha = datetime.datetime.fromtimestamp(self.fecha/1000)
+        return fecha.strftime('%d/%m/%Y %H:%M')
+
+    def obtenerCantidadImagenes(self):
+        return len(ImagenVisita.objects.filter(visita=self))
+
+    def obtenerImagenes(self):
+        imagenes = ""
+        for imagen in ImagenVisita.objects.filter(visita=self):
+            imagenes = imagenes+(imagen.foto.replace("appLeafLab/",""))+","
+        return imagenes
+
+    def obtenerCantidadItemsAsociados(self):
+        return len(Ejemplar.objects.filter(visita=self,punto=None))+len(Planta.objects.filter(visita=self,punto=None))
 
     @classmethod
     def obtenerElementos(self,datos):
@@ -615,6 +664,11 @@ class Planta(models.Model):
     def guardarImagen(self,ruta):
         self.foto = ruta
         self.save()
+
+    def obtenerFoto(self):
+        if self.foto == None:
+            return ""
+        return self.foto.replace("appLeafLab/","")
         
 
 
@@ -651,6 +705,11 @@ class Ejemplar(models.Model):
     def guardarImagen(self,ruta):
         self.foto = ruta
         self.save()
+
+    def obtenerFoto(self):
+        if self.foto == None:
+            return ""
+        return self.foto.replace("appLeafLab/","")
 
 
     def __unicode__(self):

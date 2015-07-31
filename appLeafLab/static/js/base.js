@@ -2,6 +2,8 @@ const CODIGO_ERROR = 500;
 const CODIGO_EXITO = 200;
 const COMPLEJO = 1;
 const SIMPLE = 0;
+const CANTIDAD_PUNTOS = 11;
+
 $(document).ready(function(){	
 	var footer = $($(".mastfoot")[0]);
 	var valorTop = screen.height * 0.82;

@@ -36,7 +36,7 @@ body{
 
 
 .oculto{
-	display: none;
+	display: none !important;
 }
 
 .divBoton{

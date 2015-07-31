@@ -1,0 +1,128 @@
+.contenedorDatos{
+	margin:0px auto;
+	margin-top: 20px;
+	overflow: auto;
+	border-radius: 5px;
+	width: 80%;
+}
+
+.contenedorDatos >.contenedorFlexible{
+	position: absolute;
+	width: 80%;
+	background-color: #33825b;
+	overflow: hidden;
+}
+
+.navegacion{
+	overflow: hidden;
+}
+
+.contenedorCampanias{
+}
+
+.contenedorTransectas{
+	
+}
+
+.contenedorVisitas{
+
+}
+
+.contenedorAdjuntos{
+	float: right;
+    width: 68%;
+
+}
+
+.informacionAsociada{
+	position: relative;
+	background-color: transparent;
+	border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    height: 30%;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    width: 48%;
+}
+
+.contenedorDatosAsociados{
+	margin:0px auto;
+	margin-top: 20px;
+	border-radius: 5px;
+	width: 80%;
+}
+
+.contenedorInformacionVisita{
+	display: inline;
+	float: right;
+	width: 0%;
+	overflow: hidden;
+}
+
+.otroIzquierda{
+	float: left;
+	left: 26%;
+}
+
+.contenedorImagenes{
+	width: 30%;
+	background-size:contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	border-radius: 6px;
+}
+
+.imagenVisita{
+	background-size:contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 100%;
+	height: 100%;
+	margin-bottom: 10%;
+	border-radius: 6px;
+}
+
+.cabecera{
+	overflow: hidden;
+	margin:7px;
+}
+
+.imagenEstadoPunto{
+	float: left;
+	width: 20%;
+	overflow: hidden;
+	background-color: #006433;
+	background-size:cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+/*.imagenEstadoPunto >img{
+	margin: 0px auto;
+	margin-top: -25%;
+	max-height: 300px;
+}*/
+
+.detallePunto{
+	float: right;
+	background-color: #006433;
+	width: 79%;
+	margin-left: 1%;
+}
+
+.cabecera >div{
+	padding: 10px;
+	text-align: left;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.cuerpo{
+	width: 79%;
+	float: right;
+	margin-top: 10px;
+}

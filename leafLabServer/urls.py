@@ -29,6 +29,12 @@ urlpatterns = [
     url(r'^baseDeDatos', views.dataBase,name="dataBase"),
     url(r'^about', views.about,name="about"),
 
+    url(r'^obtenerAdjuntosVisita', views.obtenerAdjuntosVisita,name="obtenerAdjuntosVisita"),
+    url(r'^obtenerDetallePunto', views.obtenerDetallePunto,name="obtenerDetallePunto"),
+    url(r'^obtenerPuntos', views.obtenerPuntos,name="obtenerPuntos"),
+    url(r'^obtenerTransectas', views.obtenerTransectas,name="obtenerTransectas"),
+    url(r'^obtenerVisitas', views.obtenerVisitas,name="obtenerVisitas"),
+
     url(r'^administracion', views.administracionDeDatos,name="administracionDeDatos"),
     url(r'^sinc', views.sincronizar,name="sincronizar"),
     url(r'^quienSos', views.identidad,name="identidad"),

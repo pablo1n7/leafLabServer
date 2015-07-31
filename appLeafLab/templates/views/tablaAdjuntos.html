@@ -1,0 +1,23 @@
+{% if condicion  %}
+	{% for planta in plantas %}
+		<a class="list-group-item" id="planta-{{planta.id}}">
+			<h4 class="list-group-item-heading">Planta #{{forloop.counter}}</h4>
+			<p class="list-group-item-text"><b>Especie: </b>{{planta.especie.nombre}},
+			<b>Posee imagen: </b>{% if planta.foto == None %} No {%else%} Sí {% endif %}
+			</p>
+		</a>
+	{% endfor %}
+	{% for ejemplar in ejemplares %}
+		<a class="list-group-item" id="ejemplar-{{ejemplar.id}}">
+			<h4 class="list-group-item-heading">Ejemplar #{{forloop.counter}}</h4>
+			<p class="list-group-item-text"><b>Tipo: </b>{{ejemplar.tipoEjemplar.nombre}},
+			<b>Posee imagen: </b>{% if ejemplar.foto == None %} No {%else%} Sí {% endif %}
+			</p>
+		</a>
+	{% endfor %}
+{% else %}
+		<a class="list-group-item">
+			<h4 class="list-group-item-heading">Sin Datos que mostrar</h4>
+			<p class="list-group-item-text">Esta Visita no contiene Adjuntos</p>
+		</a>
+{% endif %}

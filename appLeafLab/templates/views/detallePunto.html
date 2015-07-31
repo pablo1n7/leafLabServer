@@ -1,0 +1,43 @@
+
+<div class="cabecera">
+	<div id="imagenPunto" class="imagenEstadoPunto" style="background-image:url('static/img/{{punto.estadoPunto}}.png')"> 
+	
+	</div>
+	<div class="detallePunto"> 
+		<div>
+			<p class="list-group-item-text"> <b>Estado del Punto: </b>{{punto.estadoPunto}} </p>
+		</div>
+		<div>
+			<p class="list-group-item-text"> <b>Suelo encontrado: </b>{{punto.suelo.nombre}} </p>
+		</div>
+	</div>
+
+	<div id="cuerpoDetallePunto" class="cuerpo">
+		{% if condicion  %}
+			{% for planta in plantas %}
+				<a class="list-group-item" id="planta-{{planta.id}}" foto="{{planta.obtenerFoto}}">
+					<h4 class="list-group-item-heading">Planta #{{forloop.counter}}</h4>
+					<p class="list-group-item-text"><b>Especie: </b>{{planta.especie.nombre}}, <b>Toques: </b>{{planta.toques}}, 
+					<b>Posee imagen: </b>{% if planta.foto == None %} No {%else%} Sí {% endif %}
+					</p>
+				</a>
+			{% endfor %}
+			{% for ejemplar in ejemplares %}
+				<a class="list-group-item" id="ejemplar-{{ejemplar.id}}" foto="{{ejemplar.obtenerFoto}}">
+					<h4 class="list-group-item-heading">Ejemplar #{{forloop.counter}}</h4>
+					<p class="list-group-item-text"><b>Tipo: </b>{{ejemplar.tipoEjemplar.nombre}},
+					<b>Posee imagen: </b>{% if ejemplar.foto == None %} No {%else%} Sí {% endif %}
+					</p>
+				</a>
+			{% endfor %}
+		{% else %}
+				<a class="list-group-item">
+					<h4 class="list-group-item-heading">Sin informacion que mostrar</h4>
+					<p class="list-group-item-text">Este punto no contiene Adjuntos</p>
+				</a>
+		{% endif %}
+	</div>
+</div>
+<script type="text/javascript">
+	fondoImagen = "static/img/{{punto.estadoPunto}}.png";
+</script>

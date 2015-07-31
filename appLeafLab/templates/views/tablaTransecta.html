@@ -1,0 +1,19 @@
+<script type="text/javascript">
+	vaciarMapa();
+</script>
+{% if transectas.count != 0 %}
+	{% for transecta in transectas %}
+		<a class="list-group-item" id="transecta-{{transecta.id}}">
+			<h4 class="list-group-item-heading">{{transecta.ambiente}}</h4>
+			<p class="list-group-item-text"> <b>Cuadro:</b>{{transecta.obtenerCuadro}}, <b>Sentido:</b>{{transecta.obtenerSentido}}°, <b>Distancia recorrida: </b>{{transecta.distanciaEntrePuntos}}00 mts, <b>Veces recorrida: </b>{{transecta.obtenerCantidadVisitas}}</p> 
+		</a>
+<script type="text/javascript">
+	dibujarTransecta("{{transecta.obtenerCoordenadas}}");
+</script>
+	{% endfor %}  
+{% else %}
+		<a class="list-group-item">
+			<h4 class="list-group-item-heading">Sin Datos que mostrar</h4>
+			<p class="list-group-item-text">Esta Campaña no contiene Transectas</p>
+		</a>
+{% endif %}

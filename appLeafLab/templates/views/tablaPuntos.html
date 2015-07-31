@@ -1,0 +1,18 @@
+{% if puntos.count != 0 %}
+	{% for punto in puntos %}
+		<a class="list-group-item" id="visitas-{{punto.id}}">
+			<h4 class="list-group-item-heading">#{{forloop.counter}}</h4>
+			<p class="list-group-item-text"><b>Estado de aguja: </b>{{punto.estadoPunto}},
+			<b>Suelo encontrado: </b>{{punto.suelo.nombre}}
+			</p>
+		</a>
+	{% endfor %}
+<script type="text/javascript">
+	cargarImagenesVisita("{{visita.obtenerImagenes}}");
+</script>
+{% else %}
+		<a class="list-group-item">
+			<h4 class="list-group-item-heading">Sin Datos que mostrar</h4>
+			<p class="list-group-item-text">Esta Visita no contiene Puntos</p>
+		</a>
+{% endif %}

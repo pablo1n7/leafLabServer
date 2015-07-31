@@ -1,0 +1,21 @@
+{% if visitas.count != 0 %}
+	{% for visita in visitas %}
+		<a class="list-group-item" id="visitas-{{visita.id}}">
+			<h4 class="list-group-item-heading">{{visita.obtenerFecha}}</h4>
+			<p class="list-group-item-text">
+				<b>Imagenes asociadas: </b>{{visita.obtenerCantidadImagenes}}, 
+				<b>Items asociados: </b> {{visita.obtenerCantidadItemsAsociados}}
+			</p>
+		</a>
+	{% endfor %}
+
+<script type="text/javascript">
+	centrarTransecta("{{transecta.obtenerCoordenadas}}");
+</script>
+
+{% else %}
+		<a class="list-group-item">
+			<h4 class="list-group-item-heading">Sin Datos que mostrar</h4>
+			<p class="list-group-item-text">Esta Transecta no contiene Visitas</p>
+		</a>
+{% endif %}

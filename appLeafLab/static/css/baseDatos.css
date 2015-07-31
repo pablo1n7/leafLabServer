@@ -5,7 +5,7 @@
 
 .contenidoBaseDatos{
 	width: 90%;
-	height: 100%;
+	/*height: 100%;*/
 	margin:20px auto;
 	margin-bottom: 0px;
 	text-align: center;
@@ -34,7 +34,7 @@
 	border-radius: 6px;
 	border-style: solid;
 	border-color: #ddd;
-	border-width: .3px;
+	border-width: 1px;
 	width: 58%;
 	background-image: linear-gradient(to left, #006433 0px, #01220c 100%);
 }

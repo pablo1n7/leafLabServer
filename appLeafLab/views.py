@@ -16,7 +16,8 @@ elementosSimples = {"imagenVisita":ImagenVisita,"punto":Punto,"valor":Valor,"pla
 rutaBase = {'visita':settings.VISITA_DIR,'ejemplar':settings.ITEM_DIR+"/ejemplar",'planta':settings.ITEM_DIR+"/planta"}
 
 def index(request):
-	return render_to_response('views/index.html')
+	campanias = Campania.objects.all()
+	return render_to_response('views/index.html',{'campanias':campanias})
 
 def dataBase(request):
 	formasBiologicas = FormaBiologica.objects.all()
@@ -121,3 +122,39 @@ def subirImagenes(request):
 def obtenerImagenEspecie(request):
 	especie = Especie.objects.get(id=request.GET.get("idEspecie"))
 	return HttpResponse(especie.imagen)
+
+@csrf_exempt
+def obtenerTransectas(request):
+	campania = Campania.objects.get(id = request.GET.get("idCampania"))
+	transectas = Transecta.objects.filter(campania = campania)
+	return render_to_response('views/tablaTransecta.html',{"transectas":transectas})
+
+
+@csrf_exempt
+def obtenerVisitas(request):
+	transecta = Transecta.objects.get(id = request.GET.get("idTransecta"))
+	visitas = Visita.objects.filter(transecta = transecta)
+	return render_to_response('views/tablaVisita.html',{"visitas":visitas,"transecta":transecta})
+
+
+@csrf_exempt
+def obtenerPuntos(request):
+	visita = Visita.objects.get(id = request.GET.get("idVisita"))
+	puntos = Punto.objects.filter(visita = visita)
+	return render_to_response('views/tablaPuntos.html',{"puntos":puntos,"visita":visita})
+
+@csrf_exempt
+def obtenerAdjuntosVisita(request):
+	visita = Visita.objects.get(id = request.GET.get("idVisita"))
+	plantas = Planta.objects.filter(visita = visita, punto = None)
+	ejemplares = Ejemplar.objects.filter(visita = visita, punto = None)
+	condicion = (plantas.count() ==0) & (ejemplares.count() == 0);
+	return render_to_response('views/tablaAdjuntos.html',{"condicion":not condicion, "ejemplares":ejemplares,"plantas":plantas})
+
+@csrf_exempt
+def obtenerDetallePunto(request):
+	punto = Punto.objects.get(id=request.GET.get("idPunto"))
+	plantas = Planta.objects.filter(punto = punto)
+	ejemplares = Ejemplar.objects.filter(punto = punto)
+	condicion = (plantas.count() ==0) & (ejemplares.count() == 0);
+	return render_to_response('views/detallePunto.html',{"punto":punto, "condicion":not condicion, "ejemplares":ejemplares,"plantas":plantas})
