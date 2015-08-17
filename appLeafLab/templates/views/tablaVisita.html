@@ -2,9 +2,13 @@
 	{% for visita in visitas %}
 		<a class="list-group-item" id="visitas-{{visita.id}}">
 			<h4 class="list-group-item-heading">{{visita.obtenerFecha}}</h4>
+				<div onclick="var e=arguments[0] || window.event;e.stopPropagation();window.location='/grillaTransecta?idVisita={{visita.id}}'" class="botonDescarga">
+					<i class="fa fa-file-excel-o"></i>  Descargar
+				</div>
 			<p class="list-group-item-text">
 				<b>Imagenes asociadas: </b>{{visita.obtenerCantidadImagenes}}, 
-				<b>Items asociados: </b> {{visita.obtenerCantidadItemsAsociados}}
+				<b>Items asociados: </b> {{visita.obtenerCantidadItemsAsociados}}, 
+				<b>Cantidad de Plantas Desconocidas: </b> {{visita.cantidadPlantasDesconocidas}}
 			</p>
 		</a>
 	{% endfor %}

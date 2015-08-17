@@ -22,7 +22,9 @@ urlpatterns = [
     
     url(r'^campanias', views.campain,name="campain"),
     url(r'^estadisticas', views.statistics,name="statistics"),
-    
+    url(r'^grillaTransecta', views.grillaTransecta,name="grillaTransecta"),
+    url(r'^modificarPlanta', views.modificarPlanta,name="modificarPlanta"),
+    url(r'^modificarEjemplar', views.modificarEjemplar,name="modificarEjemplar"),
     url(r'^baseDeDatos/altaElemento', views.altaElementoSimple,name="altaElemento"),
     url(r'^baseDeDatos/bajaElemento', views.bajaElementoSimple,name="bajaElemento"),
     
@@ -40,6 +42,8 @@ urlpatterns = [
     url(r'^quienSos', views.identidad,name="identidad"),
     url(r'^subirImagen', views.subirImagenes,name="subirImagen"),
     url(r'^getImagenEspecie', views.obtenerImagenEspecie,name="getImagenEspecie"),
+    url(r'^getInfoPlanta', views.getInfoPlanta,name="getInfoPlanta"),
+    url(r'^getInfoEjemplar', views.getInfoEjemplar,name="getInfoEjemplar"),
     url(r'^', views.index,name="index")
     
 

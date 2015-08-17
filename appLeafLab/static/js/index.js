@@ -112,7 +112,6 @@ function inicializarDetallePunto(){
 			$("#imagenPunto").css({"background-image":"url('"+fondoImagen+"')"});
 				//$("#imagenPunto").css({"margin-top":"-25%"});
 		});
-		
 	});
 }
 
@@ -248,7 +247,6 @@ function activarPunto(idPunto) {
 		$("#contenedorDetallePunto").empty();
 		$("#contenedorDetallePunto").append(data).animate({"width":"80%"},400,"swing",function(){
 			inicializarDetallePunto();
-			
 		});
 		$("#contenedorPuntos").animate({"width":"0%"});
 	}).fail(function() {
@@ -396,8 +394,69 @@ function cambiarImagen(indice){
 	for (var i = indiceActual; i < arregloImagenes.length; i++) {
 		arregloImagenes[i].css({"width":"0%"});
 	};
-
 	arregloImagenes[indiceActual].animate({"width":"100%"},400,"swing",function() {
-		
 	});
+}
+
+function inicializarModalPlanta(idPlanta){
+	$.get( "getInfoPlanta", { "idPlanta": idPlanta } )
+	.done(function(data){
+		lanzarModal("#modalModificarItem","Planta",data,modificarPlanta);
+	});
+}
+
+function inicializarModalEjemplar(idEjemplar){
+
+	$.get( "getInfoEjemplar", { "idEjemplar": idEjemplar } )
+	.done(function(data){
+		lanzarModal("#modalModificarItem","Ejemplar",data,modificarEjemplar);
+	});
+}
+
+function modificarEjemplar(){
+	console.log("enviar Datos Ejemplar");
+	if ( validarCampos($("#item"))) {
+		valoresNuevos = [];
+		var valores = $("#item").find("input");
+		$(valores).each(function(i,e){
+			var idValor = $(e).parent().attr("valor");
+			var valor = $(e).val();
+			valoresNuevos.push({'idValor':idValor,'valor':valor});
+		});
+		var inputOpciones = $("#item").find("select");
+		$(inputOpciones).each(function(i,e){
+			var idValor = $(e).parent().attr("valor");
+			var valor = $(e).val();
+			valoresNuevos.push({'idValor':idValor,'valor':valor});
+		});
+		var id = $("#datosItemId").val();
+		datosEjemplar = {"id":id,"valores":JSON.stringify(valoresNuevos)}
+		$.post( "/modificarEjemplar", datosEjemplar)
+		.done(function(data){
+			mostrarMensajeExito("Ejemplar Modificado con éxito");
+			$("#modalModificarItem").modal("hide");
+			
+		});
+		
+	};
+}
+
+function modificarPlanta(){
+	console.log("enviar Datos Ejemplar");
+	if ( validarCampos($("#datosPlanta"))) {
+
+		var valores = $("#datosPlanta").find("input");
+		datosPlanta = {"id":valores[0].value,"especie":valores[1].value,"estadoFenologico":valores[2].value,"toques":valores[3].value}
+		$.post( "/modificarPlanta", datosPlanta)
+		.done(function(data){
+			mostrarMensajeExito("Planta Modificada con éxito");
+			$("#modalModificarItem").modal("hide");
+			
+		});
+		
+	};
+}
+
+function cancelarModal(){
+	console.log("enviar Datos Planta");
 }

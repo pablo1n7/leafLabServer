@@ -72,6 +72,11 @@ body{
 	background-image: linear-gradient(to bottom, #006433 0px, #01220c 100%);
 }
 
+.modal-body{
+  overflow: hidden;
+}
+
+
 .form-control:focus {
 	border-width: 1px !important;
 }

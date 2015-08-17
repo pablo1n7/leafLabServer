@@ -1,0 +1,119 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+<head>
+	<title></title>
+</head>
+
+<body>
+
+<style type="text/css">
+    
+	.sueloDesnudo{
+		background-color: rgba(255, 0, 0, 0.5);
+	}
+
+	.muertoEnPie{
+		background-color: rgba(0, 65, 255, 0.7);	
+	}
+
+	.toqueDirecto{
+
+		background-color: rgba(0, 100, 24, 0.5);
+
+	}
+</style>
+
+
+<table style="border-style:solid">
+	<tr>
+		<td style="border-style:solid"> Fecha: </td><td> {{visita.obtenerFecha}}</td>
+	</tr>
+	<tr>
+		<td style="border-style:solid"> Rumbo: </td><td style="border-style:solid"> {{visita.transecta.obtenerSentidoStr}}</td>
+	</tr>
+	<tr>
+		<td style="border-style:solid"> Coordenadas: </td><td style="border-style:solid"> {{visita.transecta.obtenerCoordenadasGrados}}</td>
+	</tr>
+	<tr>
+		<td style="border-style:solid"> Ambiente: </td><td style="border-style:solid"> {{visita.transecta.ambiente}}</td>
+	</tr>
+	<tr>
+		<td style="border-style:solid"> Cuadro: </td><td style="border-style:solid"> {{visita.transecta.obtenerCuadro}}</td>
+	</tr>
+</table>
+
+<table>
+		<tr>
+			<th colspan="6" style="border-style:solid; text-align: center">Muerto en Pie</th>
+			{%for punto in puntosMuertoEnPie%}
+				<td style="border-style:solid; text-align: center">{{punto}}</td>
+			{% endfor %}
+
+		</tr>
+		<tr>
+			<th colspan="6"  style="border-style:solid; text-align: center">Suelo Desnudo</th>
+			{%for punto in puntosSueloDesnudo%}
+				<td style="border-style:solid; text-align: center">{{punto}}</td>
+			{% endfor %}
+		</tr>
+		<tr >
+			<th style="border-style:solid">Familia</th>
+			<th style="border-style:solid">Tipo</th>
+			<th style="border-style:solid">Forma</th>
+			<th style="border-style:solid">Especie</th>
+			<th style="border-style:solid">IE</th>
+			<th style="border-style:solid">Forrajera</th>
+
+			{%for i in cantPuntos%}
+			<th style="border-style:solid"> {{i}} </th>
+			{% endfor %}
+			<th style="border-style:solid">Cantidad Ejemplares por Especie</th>
+			
+		</tr>
+
+	{% for fila in matriz %}
+		<tr>
+			{% for elemento in fila %}
+
+				{% if forloop.counter == 1 %}
+					<td style="border-style:solid">
+						{{elemento.0.familia.nombre}}
+					</td>
+					<td style="border-style:solid">
+						{{elemento.0.tipoBiologico.nombre}}
+					</td>
+					<td style="border-style:solid">
+						{{elemento.0.formaBiologica.nombre}}
+					</td>
+					<td style="border-style:solid">
+						{{elemento.0.nombre}}
+					</td>
+					<td style="border-style:solid">
+						{{elemento.0.indiceDeCalidad}}
+					</td>
+					{% if elemento.0.forrajera == 1 %}
+						<td style="border-style:solid">
+							Si
+						</td>
+					{%else%}
+						<td style="border-style:solid">
+							No
+						</td>
+
+					{% endif %}
+
+
+				{%else%}
+					
+					<td style="border-style:solid" class="{{elemento.1}}">
+						{{elemento.0}}
+					</td>
+				{% endif %}
+			{% endfor %}
+		</tr>
+	
+	{% endfor %}
+
+</table>
+</body>
+</html>

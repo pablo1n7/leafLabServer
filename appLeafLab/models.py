@@ -7,6 +7,7 @@ from django.conf import settings
 import re,ipdb,base64,Image,json, datetime, os
 import uuid
 import base64
+import random as r
 
 # Create your models here.
 
@@ -365,7 +366,7 @@ class TipoSuelo(models.Model):
             return respuesta
         except IntegrityError, e:
             respuesta = {'codigo': "500",'mensaje':"Imposible eliminar:Tipo actualmente en uso.",'objeto':{'id':self.id,'nombre':self.nombre}}
-        return respuesta
+            return respuesta
 
             
 
@@ -393,7 +394,13 @@ class TipoSuelo(models.Model):
 
 
 class TipoPropiedad(models.Model):
-	nombre = models.CharField(max_length=200)
+    nombre = models.CharField(max_length=200)
+    def representacion(self,valor):
+        if self.id == 1:
+            return "<div valor='"+str(valor.id)+"'><input placeholder='a,b,cd...' type='text' value='"+str(valor.valor)+"' /> </div>"
+        
+        if self.id ==2:
+            return "<div valor='"+str(valor.id)+"'><input placeholder='0,1,2...' patron= '^(-?[0-9]+)$' value='"+str(valor.valor)+"' mensaje= '' type='number' /> </div>"
 	
 # 	db.transaction(function (t) {
 #     t.executeSql('CREATE TABLE IF NOT EXISTS Enumerado(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, valores TEXT NOT NULL);', [], null, null);
@@ -402,8 +409,17 @@ class TipoPropiedad(models.Model):
 
 
 class Enumerado(TipoPropiedad):
-	valores = models.CharField(max_length=200)
-
+    valores = models.CharField(max_length=200)
+    def representacion(self,valor):
+        elementoDom = "<div valor='"+str(valor.id)+"'><select name='enumerado'>"
+        opciones = self.valores.split(",")
+        for opcion in opciones:
+            if str(valor.valor) == opcion:
+                elementoDom = elementoDom+"<option selected>"+opcion+"</option>"
+            else:
+                elementoDom = elementoDom+"<option>"+opcion+"</option>" 
+        elementoDom = elementoDom + "</select> </div>"
+        return elementoDom
 
 # 	db.transaction(function (t) {
 #     t.executeSql('CREATE TABLE IF NOT EXISTS Rango(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, valorMin INTEGER NOT NULL, valorMax INTEGER NOT NULL);', [], null, null);
@@ -411,8 +427,19 @@ class Enumerado(TipoPropiedad):
 
 
 class Rango(TipoPropiedad):
-	valorMin = models.IntegerField()
-	valorMax = models.IntegerField()
+    valorMin = models.IntegerField()
+    valorMax = models.IntegerField()
+
+    def representacion(self,valor):
+        identificador = r.randint(1,1000000)
+        funcionChange = '$("#label'+identificador+'").text(this.value);'
+        elementoDom = "<div valor='"+str(valor.id)+"'><input id='rango"+identificador+"' class='slider' onchange='"+funcionChange+"' type='range' min='"+self.valorMin+"' max='"+self.valorMax+"' value='"+str(valor.valor)+"'/>"
+        labelRango = '<span id="label'+identificador+'" class="range-value"></span> </div>'
+        elementoDom = elementoDom + labelRango
+        return elementoDom
+
+    # def representacion(self):
+    #     pass
 
 
 class Alfanumerico(TipoPropiedad):
@@ -447,6 +474,13 @@ class Propiedad(models.Model):
         datos["id_servidor"] = propiedad.id
         datos["tiposPropiedad"]["id_servidor"] = tipoPropiedad.id
         return json.dumps(datos)
+
+    def representacion(self,valor):
+        div = "<div class='propiedadEjemplar'>"
+        div = div + self.nombre
+        div = div + self.tipoPropiedad.representacion(valor)
+        div = div + "</div>"
+        return div
 
     def __unicode__(self):
         return self.nombre
@@ -499,6 +533,14 @@ class Campania(models.Model):
             return "Sin Descripción"
         return self.descripcion
 
+    def cantidadPlantasDesconocidas(self):
+        tranectas = Transecta.objects.filter(campania = self)
+        visitas = Visita.objects.filter(transecta = tranectas)
+        especieDesconocida = Especie.objects.filter(nombre="No Definido")
+        plantas = Planta.objects.filter(especie=especieDesconocida,visita=visitas,punto__isnull=False)
+        return str(plantas.count())
+
+
     def obtenerFecha(self):
         fecha = datetime.datetime.fromtimestamp(self.fecha/1000)
         return fecha.strftime('%d/%m/%Y %H:%M')
@@ -539,6 +581,24 @@ class Transecta(models.Model):
     def obtenerSentido(self):
         return int(self.sentido)
 
+    def cantidadPlantasDesconocidas(self):
+        visitas = Visita.objects.filter(transecta = self)
+        especieDesconocida = Especie.objects.filter(nombre="No Definido")
+        plantas = Planta.objects.filter(especie=especieDesconocida,visita=visitas,punto__isnull=False)
+        return str(plantas.count())
+
+    def obtenerSentidoStr(self):
+        sentido = self.obtenerSentido
+        if sentido > 315 or sentido < 45:
+            return "S-->N"
+        if sentido > 45 and sentido < 135:
+            return "O-->E"
+        if sentido > 135 and sentido < 225:
+            return "N-->S"
+        
+        return "E-->O"
+
+
     def obtenerCantidadVisitas(self):
         return len(Visita.objects.filter(transecta=self))
 
@@ -550,6 +610,30 @@ class Transecta(models.Model):
         except Exception, e:
             coordenadas = "0,0"
         return coordenadas
+
+    def obtenerCoordenadasGrados(self):
+        strPos =""
+        posiciones = self.obtenerCoordenadas().split(',')
+        primeraPosicion = posiciones[0].split("/")
+        ultimaPosicion  = posiciones[1].split("/")
+
+        latPrimeraPosicion = float(primeraPosicion[0])
+        lngPrimeraPosicion = float(primeraPosicion[1])
+
+        deg = int(latPrimeraPosicion)
+        auxMnt = (latPrimeraPosicion - deg)*60
+        mnt = int( auxMnt)
+        sec = (auxMnt - mnt) * 60
+        strPos = strPos+str(deg)+"°"+str(abs(mnt))+"'"+str(abs(sec))+'"' +"/"
+
+        deg = int(lngPrimeraPosicion)
+        auxMnt = (lngPrimeraPosicion - deg)*60
+        mnt = int( auxMnt)
+        sec = (auxMnt - mnt) * 60
+        strPos = strPos+str(deg)+"°"+str(abs(mnt))+"'"+str(abs(sec))+'"'
+
+        return strPos;
+
 
     @classmethod
     def obtenerElementos(self,datos):
@@ -575,6 +659,42 @@ class Visita(models.Model):
     class Meta:
         unique_together = ("transecta", "fecha")
 
+
+
+    def cantidadPlantasDesconocidas(self):
+        especieDesconocida = Especie.objects.filter(nombre="No Definido")
+        plantas = Planta.objects.filter(especie=especieDesconocida,visita=self,punto__isnull=False)
+        return str(plantas.count())
+
+
+    def calcularEstadisticas(self):
+
+        puntos = Punto.objects.filter(visita = visita)
+        estadisticasEspecies={}
+#{"co":0,"coti":0,"cof":0}
+        for punto in puntos:
+            plantas = Planta.objects.filter(visita = visita,punto=punto)
+            especiesEnPunto = []
+            for planta in plantas:
+                if( not(estadisticasEspecies.hasKey(planta.especie)) ):
+                    estadisticasEspecies[planta.especie] = {"co":0,"coti":0,"cof":0,"tf":0,"ie":planta.especie.indiceDeCalidad}
+                if planta.toques > 0:
+                    if(not(planta.especie in especiesEnPunto)):
+                        especiesEnPunto.append(planta.especie)
+                        estadisticasEspecies[planta.especie]["coti"] += 1
+                        estadisticasEspecies[planta.especie]["co"] += 1
+                        if(planta.especie.forrajera == 1):
+                            estadisticasEspecies[planta.especie]["cof"] +=1
+                        
+                else:
+                    if(not(planta.especie in especiesEnPunto)):
+                        especiesEnPunto.append(planta.especie)
+                        estadisticasEspecies[planta.especie]["coti"] +=1
+
+#                 if planta.especie.forrajera == 1:
+#                     estadisticasEspecies[planta.especie]["cof"] +=1
+#                    estadisticasEspecies[planta.especie]["tf"] +=planta.toques
+#                    estadisticasEspecies[planta.especie]["tf*ie"] +=planta.toques
 
     def obtenerFecha(self):
         fecha = datetime.datetime.fromtimestamp(self.fecha/1000)
@@ -619,6 +739,11 @@ class Punto(models.Model):
     orden = models.IntegerField()
     coordenada = models.CharField(max_length=200)
     estadoPunto = models.CharField(max_length=200)
+
+    def cantidadPlantasDesconocidas(self):
+        especieDesconocida = Especie.objects.filter(nombre="No Definido")
+        plantas = Planta.objects.filter(especie=especieDesconocida,punto=self)
+        return str(plantas.count())
 
     @classmethod
     def obtenerElementos(self,datos):
@@ -710,6 +835,14 @@ class Ejemplar(models.Model):
         if self.foto == None:
             return ""
         return self.foto.replace("appLeafLab/","")
+
+    def representacion(self):
+        valores = Valor.objects.filter(ejemplar=self)
+        elementoDom = "<div>"
+        for valor in valores:
+            elementoDom =   elementoDom + valor.propiedad.representacion(valor)
+        return elementoDom +"</div>"
+        
 
 
     def __unicode__(self):

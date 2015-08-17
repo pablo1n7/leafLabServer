@@ -3,7 +3,8 @@
 		<a class="list-group-item" id="visitas-{{punto.id}}">
 			<h4 class="list-group-item-heading">#{{forloop.counter}}</h4>
 			<p class="list-group-item-text"><b>Estado de aguja: </b>{{punto.estadoPunto}},
-			<b>Suelo encontrado: </b>{{punto.suelo.nombre}}
+			<b>Suelo encontrado: </b>{{punto.suelo.nombre}}, 
+			<b>Cantidad de Plantas Desconocidas: </b> {{punto.cantidadPlantasDesconocidas}}
 			</p>
 		</a>
 	{% endfor %}

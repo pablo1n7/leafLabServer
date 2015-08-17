@@ -1,0 +1,15 @@
+<form id="datosItem">
+	<input type='text' id="datosItemId" name='id' style='display:none' value='{{ejemplar.id}}' READONLY>
+	<div id="item" class='opcionesEspecie '>
+
+	</div>
+	<div class="opcionesEspecie opcionesEspecieDerecha imagenItem" style="background-image:url('{{ejemplar.obtenerFoto}}')">
+    </div>
+</form>
+
+<script type="text/javascript">
+{% autoescape on %}
+	$("#item").append("{{ejemplar.representacion|safe}}");
+{% endautoescape %}
+</script>
+

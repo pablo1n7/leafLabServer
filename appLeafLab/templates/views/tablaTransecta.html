@@ -5,7 +5,7 @@
 	{% for transecta in transectas %}
 		<a class="list-group-item" id="transecta-{{transecta.id}}">
 			<h4 class="list-group-item-heading">{{transecta.ambiente}}</h4>
-			<p class="list-group-item-text"> <b>Cuadro:</b>{{transecta.obtenerCuadro}}, <b>Sentido:</b>{{transecta.obtenerSentido}}°, <b>Distancia recorrida: </b>{{transecta.distanciaEntrePuntos}}00 mts, <b>Veces recorrida: </b>{{transecta.obtenerCantidadVisitas}}</p> 
+			<p class="list-group-item-text"> <b>Cuadro:</b>{{transecta.obtenerCuadro}}, <b>Sentido:</b>{{transecta.obtenerSentido}}°, <b>Distancia recorrida: </b>{{transecta.distanciaEntrePuntos}}00 mts, <b>Veces recorrida: </b>{{transecta.obtenerCantidadVisitas}}, <b>Cantidad de Plantas Desconocidas: </b> {{transecta.cantidadPlantasDesconocidas}}</p> 
 		</a>
 <script type="text/javascript">
 	dibujarTransecta("{{transecta.obtenerCoordenadas}}");

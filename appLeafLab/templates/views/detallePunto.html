@@ -1,4 +1,3 @@
-
 <div class="cabecera">
 	<div id="imagenPunto" class="imagenEstadoPunto" style="background-image:url('static/img/{{punto.estadoPunto}}.png')"> 
 	
@@ -15,7 +14,7 @@
 	<div id="cuerpoDetallePunto" class="cuerpo">
 		{% if condicion  %}
 			{% for planta in plantas %}
-				<a class="list-group-item" id="planta-{{planta.id}}" foto="{{planta.obtenerFoto}}">
+				<a class="list-group-item" id="planta-{{planta.id}}" foto="{{planta.obtenerFoto}}" onclick="inicializarModalPlanta({{planta.id}})">
 					<h4 class="list-group-item-heading">Planta #{{forloop.counter}}</h4>
 					<p class="list-group-item-text"><b>Especie: </b>{{planta.especie.nombre}}, <b>Toques: </b>{{planta.toques}}, 
 					<b>Posee imagen: </b>{% if planta.foto == None %} No {%else%} Sí {% endif %}
@@ -23,7 +22,7 @@
 				</a>
 			{% endfor %}
 			{% for ejemplar in ejemplares %}
-				<a class="list-group-item" id="ejemplar-{{ejemplar.id}}" foto="{{ejemplar.obtenerFoto}}">
+				<a class="list-group-item" id="ejemplar-{{ejemplar.id}}" foto="{{ejemplar.obtenerFoto}}" onclick="inicializarModalEjemplar({{ejemplar.id}})">
 					<h4 class="list-group-item-heading">Ejemplar #{{forloop.counter}}</h4>
 					<p class="list-group-item-text"><b>Tipo: </b>{{ejemplar.tipoEjemplar.nombre}},
 					<b>Posee imagen: </b>{% if ejemplar.foto == None %} No {%else%} Sí {% endif %}

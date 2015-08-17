@@ -49,7 +49,9 @@
 			{% for camp in campanias %}
 				<a class="list-group-item" id="campania-{{camp.id}}">
 					<h4 class="list-group-item-heading">{{camp.nombre}}</h4>
-					<p class="list-group-item-text"> <b> Fecha: </b> {{camp.obtenerFecha}}, <b>Cantidad de Transectas: </b> {{camp.obtenerCantidadTransectas}} <br> <b> Descripción: </b> {{camp.obtenerDescripcion}} </p>
+					<p class="list-group-item-text"> <b> Fecha: </b> {{camp.obtenerFecha}}, <b>Cantidad de Transectas: </b> {{camp.obtenerCantidadTransectas}} <br><b>Cantidad de Plantas Desconocidas: </b> {{camp.cantidadPlantasDesconocidas}} <br> <b> Descripción: </b> {{camp.obtenerDescripcion}} </p>
+
+					
 				</a>
 			{% endfor %}
 		{% else %}
@@ -68,5 +70,24 @@
 	</div>
 </div>
 
+
+<div id="modalModificarItem" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" name="cabeceraModal">Modal title</h4>
+        </div>
+        <div class="modal-body">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger izquierda oculto"><i class="fa fa-trash"></i> Eliminar</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+          <button type="button" name="aceptar" class="btn btn-primary"><i class="fa fa-check"></i> Aceptar</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 
 {% endblock contenido%}

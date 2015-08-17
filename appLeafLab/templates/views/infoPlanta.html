@@ -1,0 +1,26 @@
+<form id='datosPlanta'>
+	<input type='text' name='id' style='display:none' value='{{planta.id}}' READONLY>
+	<div id="plantaEspecie" class='opcionesEspecie '>
+	  	<div class='form-group'>
+		    <label>Especie</label>
+		    <input type='text' id='especie' name='especie' class='form-control' placeholder='{{planta.especie.nombre}}' value='{{planta.especie.nombre}}' patron="{{patron}}" mensaje="La especie debe ser valida">
+	  	</div>
+
+	  	<div class='form-group'>
+		    <label>Estado Fenológico</label>
+		    <input type='text' name='estadoFenologico' class='form-control' placeholder='{{planta.estadoFenologico}}' value='{{planta.estadoFenologico}}'>
+	  	</div>
+	  	<div class='form-group'>
+		    <label>Toques</label>
+		    <input type='number' name='toques' class='form-control' patron="^([0-9]*)$" mensaje="Los toques no pueden estar vacio" placeholder='{{planta.toques}}' value='{{planta.toques}}'>
+	  	</div>
+    </div>
+    <div class="opcionesEspecie opcionesEspecieDerecha imagenItem" style="background-image:url('{{planta.obtenerFoto}}')">
+    </div>
+</form>
+
+{% autoescape on %}
+<script type='text/javascript'>
+	activarSugerencia(JSON.parse('{{especies|safe}}'),$('#especie').get(0));
+</script>
+{% endautoescape %}
