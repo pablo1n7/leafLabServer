@@ -478,6 +478,7 @@ class Propiedad(models.Model):
     def representacion(self,valor):
         div = "<div class='propiedadEjemplar'>"
         div = div + self.nombre
+        ipdb.set_trace()
         div = div + self.tipoPropiedad.representacion(valor)
         div = div + "</div>"
         return div
@@ -552,9 +553,9 @@ class Campania(models.Model):
     def obtenerElementos(self,datos):
         campania = Campania(nombre=datos["nombre"],descripcion=datos["descripcion"],fecha=datos["fecha"])
         campania.save()
-        for idTipoEjemplar in datos["tiposEjemplaresAsociados"]:
-            tipoEjemplar = TipoEjemplar.objects.get(id=idTipoEjemplar)
-            campania.tiposEjemplares.add(tipoEjemplar)
+        # for idTipoEjemplar in datos["tiposEjemplaresAsociados"]:
+        #     tipoEjemplar = TipoEjemplar.objects.get(id=idTipoEjemplar)
+        #     campania.tiposEjemplares.add(tipoEjemplar)
         #ipdb.set_trace()
         datos["id_servidor"] = campania.id
         return json.dumps(datos)
