@@ -1,10 +1,17 @@
+<div class="infoEjemplar"> 
+	<p>Tipo Ejemplar: {{ejemplar.tipoEjemplar.nombre}} </p>
+	<p>Descripción: {{ejemplar.tipoEjemplar.descripcion}} </p>
+</div>
 <form id="datosItem">
 	<input type='text' id="datosItemId" name='id' style='display:none' value='{{ejemplar.id}}' READONLY>
-	<div id="item" class='opcionesEspecie '>
+	<div id="item" class='opcionesEspecie ' {% if ejemplar.obtenerFoto == "" %} style="width:100%"  {% endif %}>
 
 	</div>
+
+	{% if ejemplar.obtenerFoto != "" %}
 	<div class="opcionesEspecie opcionesEspecieDerecha imagenItem" style="background-image:url('{{ejemplar.obtenerFoto}}')">
     </div>
+    {% endif %}
 </form>
 
 <script type="text/javascript">

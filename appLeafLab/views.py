@@ -163,7 +163,7 @@ def obtenerDetallePunto(request):
 
 
 def grillaTransecta(request):
-	cantidadPuntos = 11;
+	cantidadPuntos = 100;
 	visita = Visita.objects.get(id = request.GET.get("idVisita"))
 	puntos = Punto.objects.filter(visita = visita).order_by('orden')
 	diccionarioEspecie = {}
@@ -179,6 +179,7 @@ def grillaTransecta(request):
 		#columnaPuntos.append(estados[punto.estadoPunto])
 		plantas = Planta.objects.filter(punto = punto,toques__range=(0,100))
 		for planta in plantas:
+
 			if estados[punto.estadoPunto] != "toqueDirecto":
 				toques = '-1';
 				if estados[punto.estadoPunto] == "sueloDesnudo":

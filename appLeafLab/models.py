@@ -8,6 +8,8 @@ import re,ipdb,base64,Image,json, datetime, os
 import uuid
 import base64
 import random as r
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
 
 # Create your models here.
 
@@ -106,10 +108,10 @@ class FormaBiologica(models.Model):
                 respuesta = {'codigo': "500",'mensaje':"Imposible realizar operación: Nombre duplicado."}
                 return respuesta
         else:
-    		raise Exception()
-    		
+            raise Exception()
+            
     def __unicode__(self):
-    	return self.nombre
+        return self.nombre
     
 #     db.transaction(function (t) {
 #         t.executeSql('CREATE TABLE IF NOT EXISTS TipoBiologico(nombre TEXT NOT NULL PRIMARY KEY);', [], null, null);
@@ -232,7 +234,7 @@ class EstadoDeConservacion(models.Model):
 
 
 
-# 	  db.transaction(function (t) {
+#     db.transaction(function (t) {
 #        t.executeSql('CREATE TABLE IF NOT EXISTS Especie(familia TEXT NOT NULL, nombre TEXT NOT NULL PRIMARY KEY,formaBiologica TEXT NOT NULL, tipoBiologico TEXT NOT NULL , distribucionGeografica TEXT NOT NULL, indiceDeCalidad INTEGER NOT NULL, forrajera INT NOT NULL ,estadoDeConservacion TEXT NOT NULL,imagen TEXT, FOREIGN KEY (familia) REFERENCES Familia(nombre),FOREIGN KEY (formaBiologica) REFERENCES FormaBiologica(nombre),FOREIGN KEY (tipoBiologico) REFERENCES TipoBiologico(nombre),FOREIGN KEY (distribucionGeografica) REFERENCES DistribucionGeografica(nombre),FOREIGN KEY (estadoDeConservacion) REFERENCES EstadoDeConservacion(nombre));', [], null, null);
 #    });
 
@@ -347,9 +349,9 @@ class Especie(models.Model):
         return self.nombre
 
 
-# 	db.transaction(function (t) {
+#   db.transaction(function (t) {
 #     t.executeSql('CREATE TABLE IF NOT EXISTS TipoSuelo(nombre TEXT NOT NULL, PRIMARY KEY (nombre));', [], null, null);
-# 	});
+#   });
 class TipoSuelo(models.Model):
     nombre = models.CharField(max_length=200,unique=True)
 
@@ -387,24 +389,32 @@ class TipoSuelo(models.Model):
         return self.nombre
 
 
-# 	db.transaction(function (t) {
+#   db.transaction(function (t) {
 #         t.executeSql('CREATE TABLE IF NOT EXISTS TipoPropiedad(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nombre TEXT NOT NULL, idRango INTEGER,idEnumerado INTEGER, FOREIGN KEY (idRango) REFERENCES Rango(id),FOREIGN KEY (idEnumerado) REFERENCES Enumerado(id));', [], null, null);
 #   });
 
 
 
-class TipoPropiedad(models.Model):
+class TipoPropiedadAbs(models.Model):
     nombre = models.CharField(max_length=200)
-    def representacion(self,valor):
+    class Meta:
+        abstract = True
+
+class TipoPropiedad(TipoPropiedadAbs):
+    
+    def getInstancia(self):
         if self.id == 1:
-            return "<div valor='"+str(valor.id)+"'><input placeholder='a,b,cd...' type='text' value='"+str(valor.valor)+"' /> </div>"
-        
-        if self.id ==2:
-            return "<div valor='"+str(valor.id)+"'><input placeholder='0,1,2...' patron= '^(-?[0-9]+)$' value='"+str(valor.valor)+"' mensaje= '' type='number' /> </div>"
-	
-# 	db.transaction(function (t) {
+            return self.alfanumerico
+        if self.id == 2:
+            return self.numerico
+        try:
+            return self.rango
+        except Exception, e:
+            return self.enumerado
+
+#   db.transaction(function (t) {
 #     t.executeSql('CREATE TABLE IF NOT EXISTS Enumerado(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, valores TEXT NOT NULL);', [], null, null);
-# 	});
+#   });
 
 
 
@@ -415,15 +425,15 @@ class Enumerado(TipoPropiedad):
         opciones = self.valores.split(",")
         for opcion in opciones:
             if str(valor.valor) == opcion:
-                elementoDom = elementoDom+"<option selected>"+opcion+"</option>"
+                elementoDom = elementoDom+"<option selected>"+str(opcion)+"</option>"
             else:
-                elementoDom = elementoDom+"<option>"+opcion+"</option>" 
+                elementoDom = elementoDom+"<option>"+str(opcion)+"</option>" 
         elementoDom = elementoDom + "</select> </div>"
         return elementoDom
 
-# 	db.transaction(function (t) {
+#   db.transaction(function (t) {
 #     t.executeSql('CREATE TABLE IF NOT EXISTS Rango(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, valorMin INTEGER NOT NULL, valorMax INTEGER NOT NULL);', [], null, null);
-# 	});
+#   });
 
 
 class Rango(TipoPropiedad):
@@ -432,9 +442,10 @@ class Rango(TipoPropiedad):
 
     def representacion(self,valor):
         identificador = r.randint(1,1000000)
-        funcionChange = '$("#label'+identificador+'").text(this.value);'
-        elementoDom = "<div valor='"+str(valor.id)+"'><input id='rango"+identificador+"' class='slider' onchange='"+funcionChange+"' type='range' min='"+self.valorMin+"' max='"+self.valorMax+"' value='"+str(valor.valor)+"'/>"
-        labelRango = '<span id="label'+identificador+'" class="range-value"></span> </div>'
+        funcionChange = '$(\\\"#label'+str(identificador)+'\\\").text(this.value);'
+        elementoDom = "<div valor='"+str(valor.id)+"'><input id='rango"+str(identificador)+"' class='slider' onchange='"+funcionChange+"' type='range' min='"+str(self.valorMin)+"' max='"+str(self.valorMax)+"' value='"+str(valor.valor)+"'/>"
+
+        labelRango = "<span id='label"+str(identificador)+"' class='range-value'> "+str(valor.valor)+" </span>  </div>"
         elementoDom = elementoDom + labelRango
         return elementoDom
 
@@ -443,22 +454,35 @@ class Rango(TipoPropiedad):
 
 
 class Alfanumerico(TipoPropiedad):
-	pass
+    def representacion(self,valor):
+        return "<div valor='"+str(valor.id)+"'><input placeholder='a,b,cd...' type='text' value='"+str(valor.valor)+"' /> </div>"
 
-class Nuemrico(TipoPropiedad):
-	pass
+class Numerico(TipoPropiedad):
+    def representacion(self,valor):
+        return "<div valor='"+str(valor.id)+"'><input placeholder='0,1,2...' patron= '^(-?[0-9]+)$' value='"+str(valor.valor)+"' mensaje= '' type='number' /> </div>"
 
-# 	db.transaction(function (t) {
+#   db.transaction(function (t) {
 #     t.executeSql('CREATE TABLE IF NOT EXISTS Propiedad(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nombre TEXT NOT NULL, descripcion TEXT NOT NULL, idTipoPropiedad INTEGER NOT NULL, FOREIGN KEY (idTipoPropiedad) REFERENCES TipoPropiedad(id));', [], null, null);
-# 	});
+#   });
 
 
-tiposPropiedades = {"simple":lambda x:(TipoPropiedad.objects.get(id=x["idPadre"])),"rango":lambda x:(Rango(id=x["id"],valorMax=x["valorMax"],valorMin=x["valorMin"])),"enumerado":lambda x:(Enumerado(id=x["id"],valores=str(x["valores"]).replace("'","").replace("[","").replace("]","")
-))}
+# tiposPropiedades = {"alfanumerico":lambda x:(Alfanumerico.objects.get(id=x["idPadre"])),"numerico":lambda x:(Numerico.objects.get(id=x["idPadre"])),"rango":lambda x:(Rango(id=x["id"],valorMax=x["valorMax"],valorMin=x["valorMin"])),"enumerado":lambda x:(Enumerado(id=x["id"],valores=str(x["valores"]).replace("'","").replace("[","").replace("]","")
+# ))}
+#tiposPropiedades = {"alfanumerico":lambda x:(Alfanumerico.objects.get(id=x["idPadre"])),"numerico":lambda x:(Numerico.objects.get(id=x["idPadre"])),"rango":lambda x:(Rango(valorMax=x["valorMax"],valorMin=x["valorMin"])),"enumerado":lambda x:(Enumerado(valores=str(x["valores"]).replace("'","").replace("[","").replace("]","")
+#))}
+#tiposPropiedades = {"alfanumerico":lambda x:(Alfanumerico.objects.get(id=x["idPadre"])),"numerico":lambda x:(Numerico.objects.get(id=x["idPadre"])),"rango":lambda x:(Rango(valorMax=x["valorMax"],valorMin=x["valorMin"])),"enumerado":lambda x:(Enumerado(valores=str(map(lambda y: y.encode("utf8"),x["valores"])).replace("'","").replace("[","").replace("]","").replace(", ",",")))}
 
+def listarLista(lista):
+    opciones =""
+    for l in lista:
+        opciones = opciones+","+l
+    return opciones[1:]
+
+tiposPropiedades = {"alfanumerico":lambda x:(Alfanumerico.objects.get(id=x["idPadre"])),"numerico":lambda x:(Numerico.objects.get(id=x["idPadre"])),"rango":lambda x:(Rango(valorMax=x["valorMax"],valorMin=x["valorMin"])),"enumerado":lambda x:(Enumerado(valores=listarLista(map(lambda y: y.encode("utf8"),x["valores"]))))}
 
 class Propiedad(models.Model):
     tipoPropiedad = models.ForeignKey(TipoPropiedad,on_delete=models.PROTECT)
+   
     nombre = models.CharField(max_length=100)
     descripcion = models.CharField(max_length=200)
 
@@ -478,8 +502,8 @@ class Propiedad(models.Model):
     def representacion(self,valor):
         div = "<div class='propiedadEjemplar'>"
         div = div + self.nombre
-        ipdb.set_trace()
-        div = div + self.tipoPropiedad.representacion(valor)
+        #ipdb.set_trace()
+        div = div + self.tipoPropiedad.getInstancia().representacion(valor)
         div = div + "</div>"
         return div
 
@@ -487,9 +511,9 @@ class Propiedad(models.Model):
         return self.nombre
 
 
-# 	db.transaction(function (t) {
+#   db.transaction(function (t) {
 #     t.executeSql('CREATE TABLE IF NOT EXISTS TipoEjemplar(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,nombre TEXT NOT NULL,descripcion TEXT NOT NULL);', [], null, null);
-# 	});
+#   });
 
 class TipoEjemplar(models.Model):
     nombre = models.CharField(max_length=200)
@@ -511,9 +535,9 @@ class TipoEjemplar(models.Model):
 
 
 
-# 	db.transaction(function (t) {
+#   db.transaction(function (t) {
 #     t.executeSql('CREATE TABLE IF NOT EXISTS TipoEjemplarPropiedad(idTipoEjemplar INTEGER NOT NULL, idPropiedad INTEGER NOT NULL, FOREIGN KEY (idTipoEjemplar) REFERENCES TipoEjemplar(id),FOREIGN KEY (idPropiedad) REFERENCES Propiedad(id),PRIMARY KEY(idTipoEjemplar,idPropiedad));', [], null, null);
-# 	});
+#   });
 
 
 

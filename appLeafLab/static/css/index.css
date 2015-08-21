@@ -148,7 +148,29 @@
 
 .propiedadEjemplar input{
 	color: black;
-	width: 100%
+	width: 100%;
+	padding-left: 3px;
 }
 
+.propiedadEjemplar select{
+	width: 100% !important;
+	height: 30px !important;
+	color: black !important;
+}
+
+.propiedadEjemplar{
+	margin-bottom:10px; 
+}
+
+.infoEjemplar{
+	border-bottom-style: solid;
+  	border-width: 1px;
+  	margin-bottom: 16px;
+  	text-align: left;
+}
+
+.contenedorItemsAdjuntos{
+	max-height: 270px;
+
+}
 	

@@ -118,3 +118,28 @@ function validarCampo(campo){
     $campo.focus();
     return true;
 }
+
+function verMapa() {
+		var styles = [
+		{
+			stylers: [
+				{ saturation: -100 },
+				{ lightness: -26 },
+				{gamma: 0.2}
+			]
+		}];
+
+		 var styledMap = new google.maps.StyledMapType(styles,{name: "Styled Map"});
+
+
+
+        var mapOptions = {
+          center: new google.maps.LatLng(-43.253432, -65.310137),
+          zoom: 12,
+          mapTypeId: google.maps.MapTypeId.SATELLITE,
+          disableDefaultUI: true
+        };
+        map = new google.maps.Map(document.getElementById("mapa"),mapOptions);
+        map.mapTypes.set('map_style', styledMap);
+		map.setMapTypeId('map_style');
+}

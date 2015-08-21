@@ -12,8 +12,8 @@ def crearValoresIniciales(sender, **kwargs):
 	estadoDeConservacion = models.EstadoDeConservacion.objects.get_or_create(argumentos)[0]
 	models.TipoSuelo.objects.get_or_create(argumentos)
 	familia = models.Familia.objects.get_or_create(argumentos)[0]
-	tipoProp = models.TipoPropiedad.objects.get_or_create(nombre="Alfanumerico")[0]
-	models.TipoPropiedad.objects.get_or_create(nombre="Numérico")
+	tipoProp = models.Alfanumerico.objects.get_or_create(nombre="Alfanumerico")[0]
+	models.Numerico.objects.get_or_create(nombre="Numérico")
 	propiedad =  models.Propiedad.objects.get_or_create(nombre="Nota",descripcion="Agregue aqui sus ideas",tipoPropiedad=tipoProp)[0]
 	tipoEjemplar = models.TipoEjemplar.objects.get_or_create(nombre="Nota",descripcion="unaNota")[0]
 	tipoEjemplar.propiedades.add(propiedad)

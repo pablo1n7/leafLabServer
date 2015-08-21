@@ -1,6 +1,6 @@
 <form id='datosPlanta'>
 	<input type='text' name='id' style='display:none' value='{{planta.id}}' READONLY>
-	<div id="plantaEspecie" class='opcionesEspecie '>
+	<div id="plantaEspecie" class='opcionesEspecie ' {% if planta.obtenerFoto == "" %} style="width:100%"  {% endif %}>
 	  	<div class='form-group'>
 		    <label>Especie</label>
 		    <input type='text' id='especie' name='especie' class='form-control' placeholder='{{planta.especie.nombre}}' value='{{planta.especie.nombre}}' patron="{{patron}}" mensaje="La especie debe ser valida">
@@ -10,13 +10,20 @@
 		    <label>Estado Fenológico</label>
 		    <input type='text' name='estadoFenologico' class='form-control' placeholder='{{planta.estadoFenologico}}' value='{{planta.estadoFenologico}}'>
 	  	</div>
+
+	  	{% if planta.punto != None %}
 	  	<div class='form-group'>
 		    <label>Toques</label>
 		    <input type='number' name='toques' class='form-control' patron="^([0-9]*)$" mensaje="Los toques no pueden estar vacio" placeholder='{{planta.toques}}' value='{{planta.toques}}'>
 	  	</div>
+	  	{% endif %}
     </div>
-    <div class="opcionesEspecie opcionesEspecieDerecha imagenItem" style="background-image:url('{{planta.obtenerFoto}}')">
-    </div>
+
+    {% if planta.obtenerFoto != "" %}
+	    <div class="opcionesEspecie opcionesEspecieDerecha imagenItem" style="background-image:url('{{planta.obtenerFoto}}')">
+	    </div>
+
+    {% endif %}
 </form>
 
 {% autoescape on %}

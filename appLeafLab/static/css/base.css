@@ -14,11 +14,13 @@ body{
 .masthead,.mastfoot{
 	margin: 0px auto;
 	position: relative;
+  z-index: 10;
 }
 
 
 .mastfoot{
 	position: absolute;
+
 }
 
 /*@media (min-width:1366px){

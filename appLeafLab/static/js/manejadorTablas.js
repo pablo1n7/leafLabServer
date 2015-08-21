@@ -35,7 +35,7 @@ var ManejadorTablas = function() {
 
 	this.agregarTabla = function(nombreTabla,idTabla,callbackClicRow,callbackAgregar) {
 
-		tablas[nombreTabla] = $(idTabla).DataTable( {"lengthChange": false,"pageLength": 7,"language": {
+		tablas[nombreTabla] = $(idTabla).DataTable( {"lengthChange": false,"pageLength": 6,"language": {
   "zeroRecords": "Busqueda sin resultados","emptyTable": "No hay elementos que mostrar","search": "Buscar","info": "Mostrando Página _PAGE_ de _PAGES_","paginate": {
     "previous": "Anterior","next":"Siguiente"}
   }});

@@ -18,6 +18,9 @@ $("document").ready(function(){
 		$("#contenedorTransectas").animate({"width":"0%"});
 		$("#contenedorVisitas").animate({"width":"0%"});
 		$("#contenedorPuntos").animate({"width":"0%"});
+		$("#contenedorDetallePunto").animate({"width":"0%"});
+		$('#puntoActivo').empty();
+		$('#puntoActivo').unbind();
 		$('#campaniaActiva').empty();
 		$('#campaniaActiva').unbind();
 		$('#transectaActiva').empty();
@@ -36,9 +39,41 @@ $("document").ready(function(){
 	$("#contenedorTransectas").perfectScrollbar();
 	$("#contenedorVisitas").perfectScrollbar();
 	$("#contenedorPuntos").perfectScrollbar();
-	$("#contenedorAdjuntosVisita").perfectScrollbar();
+	//$("#contenedorAdjuntosVisita").perfectScrollbar();
 
 });
+
+var gestorImagenes = function($imagenes){
+	this.indiceActual = 0;
+	this.arregloImagenes = $imagenes;
+	_this = this;
+	this.actualizar = function(indice){
+		if(_this.arregloImagenes.length == 0){
+			setTimeout(function(){_this.actualizar(0);},3000);
+			return;
+		}
+		var indiceActual = indice%(_this.arregloImagenes.length);
+		if(_this.arregloImagenes.length == 1){
+			setTimeout(function(){_this.actualizar(indice+1);},3000);
+			return;
+		}
+		if(enVisita)
+			setTimeout(function(){_this.actualizar(indice+1);},3000);
+
+		for (var i = indiceActual; i >= 0; i--){
+			$(_this.arregloImagenes[i]).css({"width":"100%"});
+		};
+
+		for (var i = indiceActual; i < _this.arregloImagenes.length; i++) {
+			$(_this.arregloImagenes[i]).css({"width":"0%"});
+		};
+		$(_this.arregloImagenes[indiceActual]).animate({"width":"100%"},400,"swing",function() {
+		});
+	};
+	_this.actualizar();
+}
+var cambiarImagen = new gestorImagenes([]);
+
 
 function reubicarMapa() {
 	// body...
@@ -256,32 +291,6 @@ function activarPunto(idPunto) {
 
 
 
-function verMapa() {
-		var styles = [
-		{
-			stylers: [
-				{ saturation: -100 },
-				{ lightness: -26 },
-				{gamma: 0.2}
-			]
-		}];
-
-		 var styledMap = new google.maps.StyledMapType(styles,{name: "Styled Map"});
-
-
-
-        var mapOptions = {
-          center: new google.maps.LatLng(-43.253432, -65.310137),
-          zoom: 12,
-          mapTypeId: google.maps.MapTypeId.SATELLITE,
-          disableDefaultUI: true
-        };
-        map = new google.maps.Map(document.getElementById("mapa"),mapOptions);
-        map.mapTypes.set('map_style', styledMap);
-		map.setMapTypeId('map_style');
-}
-
-
 function vaciarMapa() {
 	for (var i = 0; i < marcadores.length; i++) {
 		marcadores[i].setMap(null);
@@ -377,26 +386,28 @@ function cargarImagenesVisita(listaImagenes){
 
 	$('#infoVisita').append($contenedorImagenes);
 	enVisita = true;
-	cambiarImagen(0);
+//	cambiarImagen(0);
+	cambiarImagen.arregloImagenes = $($contenedorImagenes.find("div"));
 }
 
-function cambiarImagen(indice){
-	var indiceActual = indice%(arregloImagenes.length);
-	if(arregloImagenes.length == 1)
-		return;
-	if(enVisita)
-		setTimeout(function(){cambiarImagen(indice+1)},3000);
 
-	for (var i = indiceActual; i >= 0; i--){
-		arregloImagenes[i].css({"width":"100%"});
-	};
+// function cambiarImagen(indice){
+// 	var indiceActual = indice%(arregloImagenes.length);
+// 	if(arregloImagenes.length == 1)
+// 		return;
+// 	if(enVisita)
+// 		setTimeout(function(){cambiarImagen(indice+1);},3000);
 
-	for (var i = indiceActual; i < arregloImagenes.length; i++) {
-		arregloImagenes[i].css({"width":"0%"});
-	};
-	arregloImagenes[indiceActual].animate({"width":"100%"},400,"swing",function() {
-	});
-}
+// 	for (var i = indiceActual; i >= 0; i--){
+// 		arregloImagenes[i].css({"width":"100%"});
+// 	};
+
+// 	for (var i = indiceActual; i < arregloImagenes.length; i++) {
+// 		arregloImagenes[i].css({"width":"0%"});
+// 	};
+// 	arregloImagenes[indiceActual].animate({"width":"100%"},400,"swing",function() {
+// 	});
+// }
 
 function inicializarModalPlanta(idPlanta){
 	$.get( "getInfoPlanta", { "idPlanta": idPlanta } )
