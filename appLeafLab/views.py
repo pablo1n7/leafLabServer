@@ -177,20 +177,24 @@ def grillaTransecta(request):
 	puntosMuertoEnPie = []
 	for punto in puntos:
 		#columnaPuntos.append(estados[punto.estadoPunto])
+		if estados[punto.estadoPunto] != "toqueDirecto":
+			if estados[punto.estadoPunto] == "sueloDesnudo":
+				puntosSueloDesnudo.append("X")
+				puntosMuertoEnPie.append("")
+			else:
+				puntosSueloDesnudo.append("")
+				puntosMuertoEnPie.append("X")
+		else:
+			puntosSueloDesnudo.append("")
+			puntosMuertoEnPie.append("")
+
 		plantas = Planta.objects.filter(punto = punto,toques__range=(0,100))
 		for planta in plantas:
 
 			if estados[punto.estadoPunto] != "toqueDirecto":
 				toques = '-1';
-				if estados[punto.estadoPunto] == "sueloDesnudo":
-					puntosSueloDesnudo.append("X")
-					puntosMuertoEnPie.append("")
-				else:
-					puntosSueloDesnudo.append("")
-					puntosMuertoEnPie.append("X")
+				
 			else:
-				puntosSueloDesnudo.append("")
-				puntosMuertoEnPie.append("")
 				toques = str(planta.toques)
 
 
@@ -222,6 +226,9 @@ def grillaTransecta(request):
 	for cEspecies in cantidadPlantas:
 		#ipdb.set_trace()
 		matriz[diccionarioEspecie[cEspecies]][cantidadPuntos+1] = (str(cantidadPlantas[cEspecies]),"toqueDirecto")
+
+
+	ipdb.set_trace()
 
 	response = render_to_response('views/matrizTransecta.html',{"visita":visita,"matriz":matriz,"cantPuntos":range(1,(cantidadPuntos+1)),"estadoPuntos":columnaPuntos,"puntosSueloDesnudo":puntosSueloDesnudo,"puntosMuertoEnPie":puntosMuertoEnPie},content_type="application/x-excel; charset=utf-8")
 	
