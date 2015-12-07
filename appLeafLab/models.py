@@ -568,7 +568,7 @@ class Campania(models.Model):
 
     def obtenerFecha(self):
         fecha = datetime.datetime.fromtimestamp(self.fecha/1000)
-        return fecha.strftime('%d/%m/%Y %H:%M')
+        return fecha.strftime('%d/%m/%Y')
 
     def obtenerCantidadTransectas(self):
         return len(Transecta.objects.filter(campania=self))
@@ -773,7 +773,7 @@ class Visita(models.Model):
 
     def obtenerFecha(self):
         fecha = datetime.datetime.fromtimestamp(self.fecha/1000)
-        return fecha.strftime('%d/%m/%Y %H:%M')
+        return fecha.strftime('%d/%m/%Y')
 
     def obtenerCantidadImagenes(self):
         return len(ImagenVisita.objects.filter(visita=self))
