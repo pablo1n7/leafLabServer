@@ -1,8 +1,20 @@
 {% extends "base.html" %}
 
 {% block titulo %}
-	Este es el index
+	About Us
 {% endblock %}
+
+{% load staticfiles %}
+{% block estilos %}
+	<link rel="stylesheet" href="{% static "css/about.css" %}">
+	<link rel="stylesheet" href="{% static "perfect-scrollbar/css/perfect-scrollbar.css" %}">
+	
+{% endblock estilos %}
+
+{% block script %}
+	<script src="{% static "perfect-scrollbar/js/perfect-scrollbar.jquery.js" %}"></script>
+	<script src="{% static "js/about.js" %}"></script>
+{% endblock script%}
 
 {% block menu %}
 	<li><a href="/">Home</a></li>
@@ -12,5 +24,52 @@
 {% endblock %}
 
 {% block contenido %}
-	about
+
+	
+	<div id="contenedorAbout" class="contenedorAbout">
+			<div class="seccionAbout">
+				<div class="tituloSeccionAbout">Sobre la Aplicación</div>
+				'Leaf-Lab Server' es el servidor de un proyecto de tesina elaborado por alumnos de la Universidad Nacional de la Patagonia San Juan Bosco. El mismo fue desarrollado con el fin de ser una herramienta de apoyo a las actividades de relevamiento realizados con la aplicación móvil en la cual se basa el proyecto: 'App Leaf-Lab'.
+			</div>
+			<div class="seccionAbout">
+				<div class="tituloSeccionAbout">Herramientas</div>
+				<div class="contenedorLogos"> <a href="https://www.djangoproject.com/"><img src="{% static "img/logos/django-logo.png" %}"> </a> </div>	
+				<div class="contenedorLogos"> <a href="https://software.intel.com/en-us/intel-xdk"><img src="{% static "img/logos/intelxdk-logo.png" %}"> </a></div>	
+				<div class="contenedorLogos"> <a href="http://jquery.com/"> <img src="{% static "img/logos/jquery-logo.png" %}"> </a> </div>	
+				<div class="contenedorLogos"> <a href="http://getbootstrap.com/"> <img src="{% static "img/logos/bootstrap-logo.png" %}"></a> </div>	
+				<div class="contenedorLogos"> <a href="http://olado.github.io/doT/index.html"> <img class="logoDoT" src="{% static "img/logos/doT-logo.png" %}"></a> </div>	
+				<div class="contenedorLogos"> <a href="http://yuilibrary.com/"> <img src="{% static "img/logos/yui-logo.png" %}"></a> </div>	
+				<div class="contenedorLogos"> <a href="http://www.postgresql.org.es/"> <img src="{% static "img/logos/postgresql-logo.png" %}"> </a></div>	
+				<div class="contenedorLogos"> <a href="http://fortawesome.github.io/Font-Awesome/"> <img src="{% static "img/logos/fontawesome-logo.png" %}"></a> </div>	
+				<div class="contenedorLogos"> <a href="http://www.gimp.org.es/"> <img src="{% static "img/logos/gimp-logo.png" %}"> </a></div>	
+			</div>
+			<div class="seccionAbout">
+				<div class="tituloSeccionAbout">Colaboradores</div>
+				<div>
+					<div class="contenedorColaborador">
+						<p class="nombreColaborador">Almonacid J. Samuel</p>
+						<p>Staff de Desarrollo</p>
+					</div> 
+					<div class="contenedorColaborador"> 
+						<p class="nombreColaborador">Lic. Firmenich Diego</p> 
+						<p>Staff de Desarrollo</p>
+					</div>
+					<div class="contenedorColaborador">
+						<p class="nombreColaborador">Navarro J. Pablo</p>
+						<p>Staff de Desarrollo</p>
+					</div>
+				</div>
+				<div>
+					<div class="contenedorColaborador contenedorColaborador2">
+						<p class="nombreColaborador">Dra. Cynthia Gonzalez</P>
+						<p>Biologa</p>
+					</div> 
+					<div class="contenedorColaborador contenedorColaborador2">
+						<p class="nombreColaborador">Lic. Maria R. Klagges</P>
+						<p>Biologa</p>
+					</div>
+				</div>
+
+			</div>
+	</div>
 {% endblock %}

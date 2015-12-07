@@ -8,6 +8,7 @@ body{
 	color:white;
 	text-shadow:0 1px 3px rgba(0, 0, 0, 0.5);
 	text-align: center;
+  overflow: hidden;
 
 }
 
@@ -250,3 +251,12 @@ input.toggle:checked + label > span {
 .toggleGuia{
 	border-radius: 100px !important;
 }
+
+.awesomplete{
+  color:black !important;
+}
+
+div.awesomplete mark {
+    background: rgba(176, 176, 176, 0.42) none repeat scroll 0% 0% !important;
+}
+

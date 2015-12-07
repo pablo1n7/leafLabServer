@@ -1,0 +1,72 @@
+.seccionAbout{
+  width: 60%;
+  margin: 28px auto 0px;
+}
+
+.tituloSeccionAbout{
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: #fff;
+  text-align: left;
+  font-size:24px;
+  margin-bottom: 20px;
+}
+
+.contenedorLogos{
+  float: left;
+  width: 33%;
+  height: 115px;
+}
+
+.contenedorLogos img{
+  width: 55%;
+}
+
+.logoDoT{
+  width: 35% !important;
+}
+
+
+@media (max-width:1920px){
+  .contenedorAbout{
+    max-height: 900px;
+    overflow: hidden;
+  }  
+}
+
+@media (max-width:1320px){
+  .contenedorAbout{
+    max-height: 550px;
+    overflow: hidden;
+  }
+}
+
+@media (max-width:800px){
+  .contenedorAbout{
+    max-height: 450px;
+    overflow: hidden;
+  }
+
+  tr>td:nth-child(5) {
+    display:none !important;
+  }
+
+  tr>td:nth-child(6) {
+    display:none !important;
+  }
+}
+
+
+.contenedorColaborador{
+  float: left;
+  width: 33%;
+}
+
+.contenedorColaborador2{
+  width: 50% !important;
+  margin-top: 50px;
+}
+
+.nombreColaborador{
+  font-size: 22;
+}

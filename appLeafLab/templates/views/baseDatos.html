@@ -8,8 +8,8 @@
 	<link rel="stylesheet" href="{% static "css/baseDatos.css" %}">
 	<link rel="stylesheet" href="{% static "autosuggest/css/autosuggest.css" %}">
 	<link rel="stylesheet" href="{% static "Jcrop/css/jquery.Jcrop.min.css" %}">
+	<link rel="stylesheet" href="{% static "perfect-scrollbar/css/perfect-scrollbar.css" %}">
 {% endblock estilos%}
-
 {% block script %}
 	<script src="{% static "Jcrop/js/jquery.Jcrop.min.js" %}"></script>
 	<script src="{% static "js/Drag&Drop.js" %}"></script>
@@ -18,6 +18,7 @@
 	<script src="{% static "dataTable/js/jquery.dataTables.min.js" %}"></script>
 
 	<script src="{% static "autosuggest/js/autosuggest.js" %}"></script>
+	<script src="{% static "perfect-scrollbar/js/perfect-scrollbar.jquery.js" %}"></script>
 
 {% endblock script%}
 
@@ -45,32 +46,32 @@
 
 			<a id="formaBiologica" class="list-group-item active">
 			    <h4 class="list-group-item-heading">Forma Biológica</h4>
-			    <p class="list-group-item-text">Conjunto de rasgos característicos de una planta que determinan su adaptación al medio.</p>
+			    <p class="list-group-item-text infoCaracteristica">Conjunto de rasgos característicos de una planta que determinan su adaptación al medio.</p>
 			</a>
 			<a id="tipoBiologico" class="list-group-item">
 			    <h4 class="list-group-item-heading">Tipo Biológico</h4>
-			    <p class="list-group-item-text">Agrupaciones de especies, con o sin afinidad filogenética, que presentan un conjunto de rasgos similares.</p>
+			    <p class="list-group-item-text infoCaracteristica">Agrupaciones de especies, con o sin afinidad filogenética, que presentan un conjunto de rasgos similares.</p>
 			</a>
 			<a id="estadoConservacion" class="list-group-item">
 			    <h4 class="list-group-item-heading">Estado de Conservación</h4>
-			    <p class="list-group-item-text">Medida de la probabilidad de que una especie continúe existiendo en el presente o en el futuro cercano.</p>
+			    <p class="list-group-item-text infoCaracteristica">Medida de la probabilidad de que una especie continúe existiendo en el presente o en el futuro cercano.</p>
 			</a>
 			<a id="distribucionGeografica" class="list-group-item">
 			    <h4 class="list-group-item-heading">Distribución Geográfica</h4>
-			    <p class="list-group-item-text">Información referida al origen y distribucion de una especie.</p>
+			    <p class="list-group-item-text infoCaracteristica">Información referida al origen y distribucion de una especie.</p>
 			</a>
 
 			<a id="familia" class="list-group-item">
 			    <h4 class="list-group-item-heading">Familia Biológica</h4>
-			    <p class="list-group-item-text">Categoría taxonómica utilizada para referirse a grupos mayores de plantas.</p>
+			    <p class="list-group-item-text infoCaracteristica">Categoría taxonómica utilizada para referirse a grupos mayores de plantas.</p>
 			</a>
 			<a id="especie" class="list-group-item">
 			    <h4 class="list-group-item-heading">Especie Biológica</h4>
-			    <p class="list-group-item-text">Unidad básica de la clasificación biológica.</p>
+			    <p class="list-group-item-text infoCaracteristica">Unidad básica de la clasificación biológica.</p>
 			</a>
 			<a id="suelo" class="list-group-item">
 			    <h4 class="list-group-item-heading">Tipo de Suelo</h4>
-			    <p class="list-group-item-text">Clasificación según su estructura y/o forma física.</p>
+			    <p class="list-group-item-text infoCaracteristica">Clasificación según su estructura y/o forma física.</p>
 			</a>
 		</div>
 

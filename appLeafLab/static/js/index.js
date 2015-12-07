@@ -1,5 +1,4 @@
 var ultimoMarcador = null;
-var marcadores = [];
 var enVisita = false;
 var alto = 0;
 var fondoImagen = "";
@@ -291,85 +290,31 @@ function activarPunto(idPunto) {
 
 
 
-function vaciarMapa() {
-	for (var i = 0; i < marcadores.length; i++) {
-		marcadores[i].setMap(null);
-	};
-	marcadores = []
-	map.setZoom(14);
-}
-
-function dibujarTransecta(coordenadas){
-	var coord1 = coordenadas.split(",")[0];
-	var coord2 = coordenadas.split(",")[1];
-	var latLngInicial = new google.maps.LatLng(parseFloat(coord1.split("/")[1]),parseFloat(coord1.split("/")[0]));
-	var latLngFinal = new google.maps.LatLng(parseFloat(coord2.split("/")[1]),parseFloat(coord2.split("/")[0]));
-	var transecta = new google.maps.Polyline({
-	    path: [latLngInicial,latLngFinal],
-	    geodesic: true,
-	    strokeColor: 'limegreen',
-	    strokeOpacity: 1.0,
-	    strokeWeight: 2
-  	});
-  	transecta.setMap(map);
-	var deltaLat = (latLngFinal.lat() - latLngInicial.lat()) / (CANTIDAD_PUNTOS-1);
-	var deltaLng = (latLngFinal.lng() - latLngInicial.lng()) / (CANTIDAD_PUNTOS-1);
-	for (var i = 0; i < CANTIDAD_PUNTOS; i++) {
-		var latLng = new google.maps.LatLng(latLngInicial.lat()+(i*deltaLat),latLngInicial.lng()+(i*deltaLng));
-		var marker = new google.maps.Marker({
-		  position: latLng,
-		  map: map,
-		  title: 'Punto #'+(i+1),
-		  icon:"http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-		});
-		marcadores.push(marker);
-	};
-  	marcadores.push(transecta);
-}
-
-function centrarPunto (nroPunto) {
-	if(ultimoMarcador !=null)
-		ultimoMarcador.setAnimation(null);
-
-	ultimoMarcador = marcadores[nroPunto]
-	map.setCenter(ultimoMarcador.position);
-	map.setZoom(18);
-	ultimoMarcador.setAnimation(google.maps.Animation.BOUNCE);
-
-}
-
-function centrarTransecta(coordenadas) {
-	vaciarMapa();
-	dibujarTransecta(coordenadas);
-	var coord1 = coordenadas.split(",")[0];
-	var coord2 = coordenadas.split(",")[1];
-	var coord1Lat = parseFloat(coord1.split("/")[1]);
-	var coord2Lat = parseFloat(coord2.split("/")[1]);
-	var coord1Long = parseFloat(coord1.split("/")[0]);
-	var coord2Long = parseFloat(coord2.split("/")[0]);
-	var lat = (coord1Lat + coord2Lat)/2;
-	var lng = (coord1Long + coord2Long)/2;
-	var myLatlng = new google.maps.LatLng(lat,lng);
-	map.setCenter(myLatlng);
-	map.setZoom(16);
-}
-
 function cargarImagenesVisita(listaImagenes){
 	arregloImagenes = [];
 	console.log(listaImagenes);
 	var imagenes = listaImagenes.split(",");
-	var $contenedorImagenes = $('#contenedorImagenes')
+	var $contenedorImagenes = $('#contenedorImagenes');
 	$contenedorImagenes.empty();
 	$contenedorImagenes.css({"background-image":''});
 	if(imagenes.length == 1){
 		$("#contenedorAdjuntosVisita").css({"width":"100%"});
 		return;
 	}
+
+	// var imagenBase = new Image();
+	// imagenBase.src = imagenes[0];
+	// if (imagenBase.width > imagenBase.height) {
+	// 	$contenedorImagenes.css({"transform":"rotate(90deg)"});
+	// }; 
+
+
+
 	$("#contenedorImagenes").remove();
 	//var $contenedorImagenes = $('<div id="contenedorImagenes" class="contenedorImagenes"></div>');
 	$contenedorImagenes.css({"background-image":'url("'+imagenes[imagenes.length-2]+'")'});
 	var $divAux = $('<div class="imagenVisita"/>');
-	$divAux.css({"top":(alto+20)+"px"})
+	$divAux.css({"top":(alto+20)+"px"});
 	$divAux.css({"background-image":'url("'+imagenes[0]+'")'});
 	arregloImagenes.push($divAux);
 	$contenedorImagenes.append($divAux);

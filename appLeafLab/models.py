@@ -573,6 +573,27 @@ class Campania(models.Model):
     def obtenerCantidadTransectas(self):
         return len(Transecta.objects.filter(campania=self))
 
+    def obtenerInfo(self):
+        #info = '{"id":"'+str(self.id)+'","nombre":"'+self.nombre+'","transectas":"'+self.obtenerInfoTransectas()+'"}'
+        info = {"id":self.id,"nombre":self.nombre,"transectas":self.obtenerInfoTransectas()}
+        #return info
+        return json.dumps(info)
+
+
+    def obtenerInfoTransectas(self):
+        tranectas = Transecta.objects.filter(campania = self)
+        infoTransectas = []
+        for t in tranectas:
+            coord = t.obtenerCoordenadas()
+            visitas = Visita.objects.filter(transecta=t).order_by('fecha')
+            especiesTransecta = []
+            for visita in visitas:
+                especiesTransecta.append({"visita":str(visita.fecha),"especies":visita.especiesEncontradas()})
+            infoTransectas.append({"id":str(t.id),"coordenadas":coord,"especiesTransecta":especiesTransecta})
+            #infoTransectas+'{"id":"'+str(t.id)+'","coordenadas":"'+coord+'"}'
+        return infoTransectas
+        
+
     @classmethod
     def obtenerElementos(self,datos):
         campania = Campania(nombre=datos["nombre"],descripcion=datos["descripcion"],fecha=datos["fecha"])
@@ -690,6 +711,35 @@ class Visita(models.Model):
         especieDesconocida = Especie.objects.filter(nombre="No Definido")
         plantas = Planta.objects.filter(especie=especieDesconocida,visita=self,punto__isnull=False)
         return str(plantas.count())
+
+    def puntosPlantasDesconocidas(self):
+        especieDesconocida = Especie.objects.filter(nombre="No Definido")
+        plantas = Planta.objects.filter(especie=especieDesconocida,visita=self,punto__isnull=False)
+        puntos = Punto.objects.filter(visita=self)
+        indicePuntos = []
+        indice = 0
+        for punto in puntos:
+            if (plantas.filter(punto=punto).count()):
+                indicePuntos.append({"id":punto.id,"indice":indice})
+            indice = indice+1
+        return {"id":self.id,"fecha":self.fecha,"puntos":indicePuntos}
+
+    def especiesEncontradas(self):
+#        especieDesconocida = Especie.objects.filter(nombre="No Definido")
+        plantas = Planta.objects.filter(visita=self,punto__isnull=False)
+        puntos = Punto.objects.filter(visita=self)
+        especiesPuntos = {}
+        indice = 0
+        for punto in puntos:
+            plantasPunto = plantas.filter(punto=punto)
+            for pp in plantasPunto:
+                if not especiesPuntos.has_key(pp.especie.nombre):
+                    especiesPuntos[pp.especie.nombre] = []
+                especiesPuntos[pp.especie.nombre].append(indice)
+
+#            especiesPuntos.append({"id":punto.id,"indice":indice})
+            indice = indice+1
+        return especiesPuntos
 
 
     def calcularEstadisticas(self):

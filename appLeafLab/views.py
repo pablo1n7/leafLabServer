@@ -40,7 +40,8 @@ def about(request):
 	return render_to_response('views/about.html')
 
 def campain(request):
-	return render_to_response('views/campanias.html')
+	campanias = Campania.objects.all()
+	return render_to_response('views/campanias.html',{"campanias":campanias})
 
 def administracionDeDatos(request):
 	return render_to_response('views/AdministracionDeDatos.html')
@@ -226,9 +227,6 @@ def grillaTransecta(request):
 	for cEspecies in cantidadPlantas:
 		#ipdb.set_trace()
 		matriz[diccionarioEspecie[cEspecies]][cantidadPuntos+1] = (str(cantidadPlantas[cEspecies]),"toqueDirecto")
-
-
-	ipdb.set_trace()
 
 	response = render_to_response('views/matrizTransecta.html',{"visita":visita,"matriz":matriz,"cantPuntos":range(1,(cantidadPuntos+1)),"estadoPuntos":columnaPuntos,"puntosSueloDesnudo":puntosSueloDesnudo,"puntosMuertoEnPie":puntosMuertoEnPie},content_type="application/x-excel; charset=utf-8")
 	

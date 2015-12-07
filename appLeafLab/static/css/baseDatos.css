@@ -262,3 +262,16 @@ div:has(a.active){
 .jcrop-holder {
 	margin: 0 auto;
 }
+
+@media (max-width:800px){
+ .infoCaracteristica {
+    display: none !important;
+  }
+
+  #contenedorABM{
+    width: 19% !important;
+  }
+  .datosAsociados{
+    width: 79% !important;
+  }
+}

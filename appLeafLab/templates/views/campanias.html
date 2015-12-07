@@ -4,17 +4,19 @@
 
 {% block estilos %} 
 	<link rel="stylesheet" href="{% static "css/campanias.css" %}">
+	<link rel="stylesheet" href="{% static "awesomplete/css/awesomplete.css" %}">
 
 {% endblock estilos%}
 
 {% block script %}  
 	<script src="https://maps.googleapis.com/maps/api/js?v=3&libraries=drawing&sensor=false" type="text/javascript"></script>
+	<script src="{% static "awesomplete/js/awesomplete.js" %}"></script>
 	<script src="{% static "js/campanias.js" %}"></script>
 {% endblock script %}
 
 
 {% block titulo %}
-	Este es el index
+	Leaf Lab
 {% endblock titulo %}
 
 {% block menu %}
@@ -31,6 +33,26 @@
 
 <div class="filtros">
 
+	<div id="contenedorFiltros" class="opcionesFiltro filtrosEnCurso">
+			<div class="tituloOpcion filtrosAplicados">
+				<div>
+					<div class="izquierda">Filtros:</div>
+					<div id="especieAplicada" class="filtroAplicado oculto">
+						<div id="especieAplicadaNombre" class="izquierda">Nombre</div>
+						<i class="fa fa-times-circle" onclick="eliminarFiltroEspecie()"></i>
+					</div>
+					<div id="campaniaAplicada" class="filtroAplicado oculto">
+						<div id="campaniaAplicadaNombre" class="izquierda">Nombre</div>
+						<i class="fa fa-times-circle" onclick="eliminarFiltroCampania()"></i>
+					</div>
+					<i class="fa fa-filter"></i>
+
+
+				</div>
+			</div>
+	</div>
+
+
 	<div id="contenedorEspecies" class="opcionesFiltro">
 		<div class="tituloOpcion">
 			<div>
@@ -39,7 +61,7 @@
 			</div>
 		</div>
 		<div class="cuerpoOpcion">
-			<input type="text" class="form-control" placeholder="Ej: Atriplex Lampax"/>
+			<input id="especieInput" type="text" class="form-control" name="especie" placeholder="Ej: Atriplex Lampax"/>
 		</div>
 	</div>
 
@@ -47,13 +69,28 @@
 		<div class="tituloOpcion">
 			<div>
 				Campaña
-				<i class="fa fa-map"></i>
+				<i class="fa fa-home"></i>
+
 			</div>
 		</div>
 		<div class="cuerpoOpcion">
-			<input type="text" class="form-control" placeholder="Ej: Ambiente Estepa Arbustiva"/>
+			<input id="campaniaInput" type="text" class="form-control" placeholder="Ej: Ambiente Estepa Arbustiva"/>
 		</div>
 	</div>
+	</div>
 </div>
-	campania
+
+
+{% autoescape on %}
+<script type="text/javascript">
+
+	{% for camp in campanias %}
+		reconstruirCampania(JSON.parse('{{camp.obtenerInfo|safe}}'));
+	{% endfor %}
+
+	
+</script>
+{% endautoescape %}
+
 {% endblock %}
+	campania

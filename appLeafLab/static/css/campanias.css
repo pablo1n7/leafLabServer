@@ -10,6 +10,29 @@
 	z-index:2;
 }
 
+.filtroAplicado{
+	float:left;
+	border-radius:3px;
+	border-style:none solid solid;
+	border-width: medium 1px 1px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 5px;
+	padding-left: 10px;
+	padding-right: 5px;
+	border-top: medium none;
+}
+
+.filtroAplicado i{
+	margin-left: 15px;
+	top:-3px !important;
+}
+
+.filtrosAplicados{
+	width: 157% !important;
+	height: 36px;
+}
+
 .opcionesFiltro{
 	width: 80%;
 	position: relative;
@@ -19,9 +42,26 @@
 	padding-right: 15px;
 }
 
+@media (max-width:1366px){
+	.filtrosEnCurso{
+		width: 120% !important;
+	}
+
+	.opcionesFiltro{
+		width: 100%;
+	}
+}
+
+@media (max-width:1366px){
+	.filtros {
+    	width: 30%;
+	}
+}
+
+
 .opcionesFiltro >div{
 	position: relative;
-	background-color: rgba(0, 100, 52, 0.3);
+	/*	background-color: rgba(0, 100, 52, 0.3);*/
 }
 .contenedorEspecies{
 }
@@ -34,6 +74,9 @@
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 16px;
     border-top-right-radius: 16px;
+    border-style: solid;
+	border-bottom-style: none;
+	border-width: 1px;
 }
 
 .tituloOpcion >div{
@@ -52,6 +95,9 @@
 	border-radius: 6px;
 	border-top-right-radius: 0px !important;
 	border-top-left-radius: 0px !important;
+	border-style: solid;
+	border-top-style: none;
+	border-width: 1px;
 }
 
 .cuerpoOpcion >input{
